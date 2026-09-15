@@ -1,0 +1,3032 @@
+/* =====================================================
+   HIVECARE NAVBAR
+===================================================== */
+
+.hc-navbar {
+  width: 100%;
+  height: 78px;
+  position: sticky;
+  top: 0;
+  z-index: 1000;
+
+  background: rgba(255, 255, 255, 0.96);
+
+  border-bottom: 1px solid rgba(30, 64, 175, 0.08);
+
+  transition:
+    height 0.3s ease,
+    background 0.3s ease,
+    box-shadow 0.3s ease;
+
+  backdrop-filter: blur(15px);
+  -webkit-backdrop-filter: blur(15px);
+}
+
+/* =====================================================
+   SCROLLED NAVBAR
+===================================================== */
+
+.hc-navbar-scrolled {
+  height: 68px;
+
+  background: rgba(255, 255, 255, 0.98);
+
+  box-shadow:
+    0 8px 30px rgba(15, 23, 42, 0.10);
+}
+
+/* =====================================================
+   NAVBAR CONTAINER
+===================================================== */
+
+.hc-navbar-container {
+  width: 92%;
+  max-width: 1400px;
+  height: 100%;
+
+  margin: auto;
+
+  display: flex;
+  align-items: center;
+
+  gap: 28px;
+}
+
+/* =====================================================
+   BRAND
+===================================================== */
+
+.hc-brand {
+  flex-shrink: 0;
+}
+
+.hc-brand-link {
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+
+  text-decoration: none;
+}
+
+.hc-logo-wrapper {
+  width: 44px;
+  height: 44px;
+
+  flex-shrink: 0;
+
+  border-radius: 13px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #4f46e5
+    );
+
+  box-shadow:
+    0 7px 20px rgba(37, 99, 235, 0.30);
+
+  overflow: hidden;
+}
+
+.hc-logo {
+  width: 100%;
+  height: 100%;
+
+  object-fit: contain;
+
+  display: block;
+}
+
+.hc-brand-name {
+  font-size: 25px;
+  font-weight: 800;
+
+  letter-spacing: -0.7px;
+
+  white-space: nowrap;
+}
+
+.hc-hive {
+  color: #172554;
+}
+
+.hc-care {
+  color: #2563eb;
+}
+
+/* =====================================================
+   SEARCH CONTAINER
+===================================================== */
+
+.hc-search-container {
+  position: relative;
+
+  width: 250px;
+  max-width: 390px;
+
+  margin-left: 25px;
+
+  z-index: 1000;
+}
+
+.hc-search {
+  width: 100%;
+  height: 43px;
+
+  display: flex;
+  align-items: center;
+
+  position: relative;
+
+  border-radius: 14px;
+
+  background: #f5f8ff;
+
+  border: 1px solid #e3e9f5;
+
+  transition:
+    background 0.25s ease,
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.hc-search:focus-within {
+  background: #ffffff;
+
+  border-color: #4f7df3;
+
+  box-shadow:
+    0 0 0 4px rgba(37, 99, 235, 0.10);
+}
+
+.hc-search > i {
+  margin-left: 14px;
+
+  color: #64748b;
+
+  font-size: 15px;
+
+  flex-shrink: 0;
+}
+
+.hc-search input {
+  width: 100%;
+  height: 100%;
+
+  min-width: 0;
+
+  padding: 0 12px;
+
+  border: none;
+  outline: none;
+
+  background: transparent;
+
+  color: #1e293b;
+
+  font-size: 14px;
+}
+
+.hc-search input::placeholder {
+  color: #94a3b8;
+}
+
+.hc-search-clear {
+  width: 28px;
+  height: 28px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  margin-right: 7px;
+
+  border: none;
+  border-radius: 8px;
+
+  background: transparent;
+
+  color: #64748b;
+
+  cursor: pointer;
+
+  font-size: 17px;
+
+  transition:
+    color 0.2s ease,
+    background 0.2s ease;
+}
+
+.hc-search-clear:hover {
+  color: #1e293b;
+
+  background: #e8eef8;
+}
+
+/* =====================================================
+   LIVE SEARCH SUGGESTIONS
+===================================================== */
+
+.hc-search-suggestions {
+  position: absolute;
+
+  top: calc(100% + 8px);
+  left: 0;
+
+  width: 100%;
+
+  padding: 5px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5eaf2;
+
+  border-radius: 13px;
+
+  box-shadow:
+    0 14px 35px rgba(31, 41, 55, 0.13),
+    0 4px 12px rgba(15, 23, 42, 0.05);
+
+  overflow: hidden;
+
+  animation: hcSearchDrop 0.18s ease;
+
+  z-index: 9999;
+}
+
+.hc-search-suggestion {
+  width: 100%;
+  min-height: 48px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  padding: 7px 9px;
+
+  border: none;
+  border-radius: 9px;
+
+  background: transparent;
+
+  text-align: left;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.hc-search-suggestion:hover {
+  background: #f5f8ff;
+
+  transform: translateX(2px);
+}
+
+.hc-search-suggestion:active {
+  transform:
+    translateX(2px)
+    scale(0.99);
+}
+
+.hc-suggestion-icon {
+  width: 32px;
+  height: 32px;
+
+  min-width: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #eff6ff,
+      #dbeafe
+    );
+
+  color: #2563eb;
+
+  font-size: 14px;
+}
+
+.hc-suggestion-content {
+  flex: 1;
+
+  min-width: 0;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 1px;
+}
+
+.hc-suggestion-content strong {
+  color: #172033;
+
+  font-size: 12px;
+  font-weight: 750;
+
+  line-height: 1.25;
+}
+
+.hc-suggestion-content span {
+  color: #98a2b3;
+
+  font-size: 9px;
+  font-weight: 600;
+
+  line-height: 1.25;
+}
+
+.hc-search-suggestion > .bi-arrow-up-right {
+  color: #98a2b3;
+
+  font-size: 11px;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.hc-search-suggestion:hover > .bi-arrow-up-right {
+  color: #2563eb;
+
+  transform:
+    translate(2px, -2px);
+}
+
+/* =====================================================
+   NO SEARCH RESULT
+===================================================== */
+
+.hc-search-no-result {
+  position: absolute;
+
+  top: calc(100% + 8px);
+  left: 0;
+
+  width: 100%;
+
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  padding: 12px;
+
+  background: #ffffff;
+
+  border: 1px solid #e5eaf2;
+
+  border-radius: 13px;
+
+  box-shadow:
+    0 14px 35px rgba(31, 41, 55, 0.13),
+    0 4px 12px rgba(15, 23, 42, 0.05);
+
+  z-index: 9999;
+
+  animation: hcSearchDrop 0.18s ease;
+}
+
+.hc-search-no-result > i {
+  width: 32px;
+  height: 32px;
+
+  min-width: 32px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 9px;
+
+  background: #f5f8ff;
+
+  color: #64748b;
+
+  font-size: 13px;
+}
+
+.hc-search-no-result div {
+  display: flex;
+  flex-direction: column;
+
+  gap: 2px;
+
+  min-width: 0;
+}
+
+.hc-search-no-result strong {
+  color: #172033;
+
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.hc-search-no-result span {
+  color: #98a2b3;
+
+  font-size: 9px;
+
+  line-height: 1.35;
+}
+
+/* =====================================================
+   SEARCH ANIMATION
+===================================================== */
+
+@keyframes hcSearchDrop {
+  from {
+    opacity: 0;
+
+    transform: translateY(-4px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateY(0);
+  }
+}
+
+/* =====================================================
+   NAV LINKS
+===================================================== */
+
+.hc-nav-links {
+  margin-left: auto;
+
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+}
+
+.hc-nav-link {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+
+  gap: 7px;
+
+  padding: 10px 13px;
+
+  border-radius: 10px;
+
+  color: #475569;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  text-decoration: none;
+
+  transition:
+    color 0.25s ease,
+    background 0.25s ease,
+    transform 0.25s ease;
+}
+
+.hc-nav-link i {
+  font-size: 16px;
+
+  color: #64748b;
+
+  transition:
+    color 0.25s ease,
+    transform 0.25s ease;
+}
+
+.hc-nav-link:hover {
+  color: #2563eb;
+
+  background: #eff6ff;
+
+  transform: translateY(-1px);
+}
+
+.hc-nav-link:hover i {
+  color: #2563eb;
+}
+
+/* =====================================================
+   ADMIN / WORKER
+===================================================== */
+
+.hc-special-link {
+  color: #2563eb;
+
+  background: #eff6ff;
+}
+
+.hc-special-link i {
+  color: #2563eb;
+}
+
+/* =====================================================
+   LOGIN / REGISTER
+===================================================== */
+
+.hc-auth-buttons {
+  display: flex;
+  align-items: center;
+
+  gap: 9px;
+
+  margin-left: 8px;
+}
+
+.hc-login-btn,
+.hc-register-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 7px;
+
+  padding: 10px 17px;
+
+  border-radius: 11px;
+
+  font-size: 14px;
+  font-weight: 700;
+
+  text-decoration: none;
+
+  transition:
+    color 0.25s ease,
+    background 0.25s ease,
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.hc-login-btn {
+  color: #2563eb;
+
+  background: #eff6ff;
+
+  border: 1px solid #dbeafe;
+}
+
+.hc-login-btn:hover {
+  color: #ffffff;
+
+  background: #2563eb;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 7px 18px rgba(37, 99, 235, 0.22);
+}
+
+.hc-register-btn {
+  color: #ffffff;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #4f46e5
+    );
+
+  border: none;
+
+  box-shadow:
+    0 6px 17px rgba(37, 99, 235, 0.22);
+}
+
+.hc-register-btn:hover {
+  color: #ffffff;
+
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 10px 24px rgba(37, 99, 235, 0.32);
+}
+
+/* =====================================================
+   PROFILE BUTTON
+===================================================== */
+
+.hc-profile-wrapper {
+  position: relative;
+
+  margin-left: 8px;
+}
+
+.hc-profile-btn {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 6px 11px 6px 7px;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 14px;
+
+  background: #ffffff;
+
+  cursor: pointer;
+
+  transition:
+    border-color 0.25s ease,
+    background 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.hc-profile-btn:hover,
+.hc-profile-active {
+  border-color: #bfdbfe;
+
+  background: #eff6ff;
+
+  box-shadow:
+    0 5px 15px rgba(37, 99, 235, 0.12);
+}
+
+/* =====================================================
+   USER AVATAR
+===================================================== */
+
+.hc-user-avatar {
+  width: 34px;
+  height: 34px;
+
+  min-width: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  position: relative;
+
+  overflow: hidden;
+
+  border-radius: 10px;
+
+  color: #ffffff;
+
+  font-size: 15px;
+  font-weight: 800;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #4f46e5
+    );
+}
+
+.hc-user-avatar img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  border-radius: 10px;
+}
+
+.hc-user-name {
+  max-width: 100px;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  color: #1e293b;
+
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.hc-profile-btn > i {
+  color: #64748b;
+
+  font-size: 12px;
+}
+
+/* =====================================================
+   CLICKABLE PROFILE IMAGE
+===================================================== */
+
+.hc-clickable-avatar {
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.hc-clickable-avatar:hover {
+  transform: scale(1.05);
+
+  box-shadow:
+    0 5px 15px rgba(37, 99, 235, 0.25);
+}
+
+/* =====================================================
+   PROFILE DROPDOWN
+===================================================== */
+
+.hc-profile-dropdown {
+  position: fixed;
+
+  top: 86px;
+  right: 4%;
+
+  width: 350px;
+
+  padding: 0;
+
+  overflow: hidden;
+
+  background: #ffffff;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 20px;
+
+  box-shadow:
+    0 24px 60px rgba(15, 23, 42, 0.16),
+    0 8px 25px rgba(37, 99, 235, 0.07);
+
+  z-index: 2000;
+
+  animation: hcDropdown 0.25s ease;
+}
+
+@keyframes hcDropdown {
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(-10px)
+      scale(0.98);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+/* =====================================================
+   PROFILE TOP
+===================================================== */
+
+.hc-profile-top {
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  padding: 20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f8fbff 0%,
+      #eef5ff 100%
+    );
+}
+
+/* =====================================================
+   PROFILE AVATAR CONTAINER
+===================================================== */
+
+.hc-profile-avatar-container {
+  position: relative;
+
+  width: 68px;
+  height: 68px;
+
+  min-width: 68px;
+
+  flex-shrink: 0;
+}
+
+/* =====================================================
+   LARGE PROFILE AVATAR
+===================================================== */
+
+.hc-profile-avatar-large {
+  width: 68px;
+  height: 68px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  overflow: hidden;
+
+  border-radius: 17px;
+
+  border: 3px solid #ffffff;
+
+  color: #ffffff;
+
+  font-size: 25px;
+  font-weight: 800;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #4f46e5
+    );
+
+  box-shadow:
+    0 8px 22px rgba(37, 99, 235, 0.25);
+}
+
+.hc-profile-avatar-large img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  border-radius: 14px;
+}
+
+/* =====================================================
+   PROFILE IMAGE UPLOAD
+===================================================== */
+
+.hc-profile-image-upload {
+  position: absolute;
+
+  right: -5px;
+  bottom: -5px;
+
+  width: 28px;
+  height: 28px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 3px solid #ffffff;
+
+  border-radius: 50%;
+
+  background: #2563eb;
+
+  color: #ffffff;
+
+  font-size: 11px;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 5px 13px rgba(37, 99, 235, 0.30);
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+
+  z-index: 3;
+}
+
+.hc-profile-image-upload:hover {
+  background: #1d4ed8;
+
+  transform: scale(1.10);
+
+  box-shadow:
+    0 7px 17px rgba(37, 99, 235, 0.35);
+}
+
+.hc-profile-image-upload:active {
+  transform: scale(0.96);
+}
+
+/* =====================================================
+   PROFILE NAME
+===================================================== */
+
+.hc-profile-name-section {
+  min-width: 0;
+
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  align-items: flex-start;
+
+  gap: 7px;
+}
+
+.hc-profile-name-section h5 {
+  max-width: 220px;
+
+  margin: 0;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+
+  color: #0f172a;
+
+  font-size: 17px;
+  font-weight: 800;
+
+  line-height: 1.2;
+}
+
+/* =====================================================
+   ROLE BADGE
+===================================================== */
+
+.hc-role-badge {
+  display: inline-flex;
+  align-items: center;
+
+  gap: 5px;
+
+  padding: 5px 9px;
+
+  border-radius: 20px;
+
+  background: #e7f0ff;
+
+  color: #2563eb;
+
+  font-size: 9px;
+  font-weight: 800;
+
+  letter-spacing: 0.5px;
+
+  text-transform: uppercase;
+}
+
+.hc-role-badge i {
+  font-size: 10px;
+}
+
+/* =====================================================
+   PROFILE DIVIDER
+===================================================== */
+
+.hc-profile-divider {
+  width: calc(100% - 40px);
+
+  height: 1px;
+
+  margin: 0 auto;
+
+  background: #edf1f7;
+}
+
+/* =====================================================
+   PROFILE DETAILS
+===================================================== */
+
+.hc-profile-detail {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  margin: 0 16px;
+
+  padding: 11px 5px;
+
+  border-bottom: 1px solid #f1f4f8;
+}
+
+.hc-profile-detail:last-of-type {
+  border-bottom: none;
+}
+
+/* =====================================================
+   DETAIL ICON
+===================================================== */
+
+.hc-detail-icon {
+  width: 35px;
+  height: 35px;
+
+  min-width: 35px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  font-size: 13px;
+}
+
+.hc-detail-icon.email {
+  background: #eef5ff;
+
+  color: #2563eb;
+}
+
+.hc-detail-icon.phone {
+  background: #ecfdf5;
+
+  color: #059669;
+}
+
+.hc-detail-icon.address {
+  background: #fff7ed;
+
+  color: #ea580c;
+}
+
+.hc-detail-icon.service {
+  background: #f5f3ff;
+
+  color: #7c3aed;
+}
+
+/* =====================================================
+   DETAIL TEXT
+===================================================== */
+
+.hc-profile-detail > div:last-child {
+  flex: 1;
+
+  min-width: 0;
+}
+
+.hc-profile-detail small {
+  display: block;
+
+  margin-bottom: 2px;
+
+  color: #98a2b3;
+
+  font-size: 9px;
+  font-weight: 750;
+
+  letter-spacing: 0.5px;
+
+  text-transform: uppercase;
+}
+
+.hc-profile-detail p {
+  margin: 0;
+
+  color: #344054;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  line-height: 1.35;
+
+  overflow: hidden;
+
+  text-overflow: ellipsis;
+
+  white-space: nowrap;
+}
+
+/* =====================================================
+   EDIT PROFILE
+===================================================== */
+
+.hc-profile-action {
+  width: calc(100% - 32px);
+
+  min-height: 52px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 11px;
+
+  margin: 14px 16px 8px;
+
+  padding: 8px 11px;
+
+  box-sizing: border-box;
+
+  border: 1px solid #dce8fb;
+
+  border-radius: 13px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f8fbff,
+      #eef5ff
+    );
+
+  color: #2563eb;
+
+  text-decoration: none;
+
+  font-size: 12px;
+  font-weight: 750;
+
+  box-shadow:
+    0 4px 12px rgba(37, 99, 235, 0.05);
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.hc-profile-action > i:first-child {
+  width: 34px;
+  height: 34px;
+
+  min-width: 34px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background: #ffffff;
+
+  color: #2563eb;
+
+  font-size: 15px;
+
+  box-shadow:
+    0 3px 9px rgba(37, 99, 235, 0.09);
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.hc-profile-action span {
+  flex: 1;
+
+  line-height: 1;
+}
+
+.hc-profile-action > i:last-child {
+  margin-left: auto;
+
+  color: #8aa4cf;
+
+  font-size: 11px;
+
+  transition:
+    color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.hc-profile-action:hover {
+  color: #1d4ed8;
+
+  background:
+    linear-gradient(
+      135deg,
+      #eef5ff,
+      #e4efff
+    );
+
+  border-color: #c7daf8;
+
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 8px 20px rgba(37, 99, 235, 0.11);
+}
+
+.hc-profile-action:hover > i:first-child {
+  background: #2563eb;
+
+  color: #ffffff;
+
+  transform: scale(1.05);
+}
+
+.hc-profile-action:hover > i:last-child {
+  color: #2563eb;
+
+  transform: translateX(3px);
+}
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+.hc-profile-logout {
+  width: calc(100% - 32px);
+
+  min-height: 43px;
+
+  margin: 0 16px 8px;
+
+  padding: 9px 12px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 10px;
+
+  border: 1px solid transparent;
+
+  border-radius: 11px;
+
+  background: transparent;
+
+  color: #dc2626;
+
+  font-size: 12px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  text-align: left;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    transform 0.2s ease;
+}
+
+.hc-profile-logout i {
+  width: 29px;
+  height: 29px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 8px;
+
+  background: #fff1f1;
+
+  color: #dc2626;
+
+  font-size: 13px;
+}
+
+.hc-profile-logout span {
+  flex: 1;
+}
+
+.hc-profile-logout:hover {
+  background: #fff7f7;
+
+  border-color: #fee2e2;
+
+  transform: translateY(-1px);
+}
+
+/* =====================================================
+   CLOSE BUTTON
+===================================================== */
+
+.hc-profile-close {
+  width: calc(100% - 32px);
+
+  height: 35px;
+
+  margin: 0 16px 14px;
+
+  border: none;
+
+  border-radius: 9px;
+
+  background: transparent;
+
+  color: #98a2b3;
+
+  font-size: 10px;
+  font-weight: 650;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    color 0.2s ease;
+}
+
+.hc-profile-close:hover {
+  background: #f5f7fa;
+
+  color: #475467;
+}
+
+/* =====================================================
+   MOBILE MENU TOGGLE
+===================================================== */
+
+.hc-menu-toggle {
+  display: none;
+
+  width: 42px;
+  height: 42px;
+
+  margin-left: auto;
+
+  padding: 9px;
+
+  border: 1px solid #e2e8f0;
+
+  border-radius: 11px;
+
+  background: #ffffff;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.hc-menu-toggle:hover {
+  background: #f8fbff;
+
+  border-color: #bfdbfe;
+
+  box-shadow:
+    0 5px 15px rgba(37, 99, 235, 0.08);
+}
+
+.hc-menu-toggle span {
+  display: block;
+
+  height: 2px;
+
+  margin: 5px 0;
+
+  border-radius: 5px;
+
+  background: #2563eb;
+
+  transition:
+    transform 0.3s ease,
+    opacity 0.3s ease;
+}
+
+.hc-menu-toggle.open span:nth-child(1) {
+  transform:
+    translateY(7px)
+    rotate(45deg);
+}
+
+.hc-menu-toggle.open span:nth-child(2) {
+  opacity: 0;
+}
+
+.hc-menu-toggle.open span:nth-child(3) {
+  transform:
+    translateY(-7px)
+    rotate(-45deg);
+}
+
+/* =====================================================
+   TABLET
+===================================================== */
+
+@media (max-width: 1050px) {
+
+  .hc-navbar-container {
+    width: 94%;
+
+    gap: 15px;
+  }
+
+  .hc-search-container {
+    width: 200px;
+
+    margin-left: 10px;
+  }
+
+  .hc-search {
+    width: 100%;
+  }
+
+  .hc-nav-links {
+    gap: 4px;
+  }
+
+  .hc-nav-link {
+    padding: 9px 9px;
+
+    font-size: 13px;
+
+    gap: 6px;
+  }
+
+  .hc-nav-link i {
+    font-size: 15px;
+  }
+
+  .hc-user-name {
+    max-width: 75px;
+  }
+
+  .hc-profile-wrapper {
+    margin-left: 4px;
+  }
+}
+
+/* =====================================================
+   MOBILE NAVIGATION
+===================================================== */
+
+@media (max-width: 768px) {
+
+  .hc-navbar {
+    height: 70px;
+  }
+
+  .hc-navbar-scrolled {
+    height: 64px;
+  }
+
+  .hc-navbar-container {
+    width: 94%;
+
+    gap: 10px;
+  }
+
+  /* ---------------------------------------------
+     BRAND
+  --------------------------------------------- */
+
+  .hc-brand-name {
+    font-size: 22px;
+  }
+
+  .hc-logo-wrapper {
+    width: 40px;
+    height: 40px;
+
+    border-radius: 11px;
+  }
+
+  /* ---------------------------------------------
+     SEARCH HIDDEN ON MOBILE
+  --------------------------------------------- */
+
+  .hc-search-container {
+    display: none;
+  }
+
+  .hc-search {
+    display: none;
+  }
+
+  /* ---------------------------------------------
+     HAMBURGER
+  --------------------------------------------- */
+
+  .hc-menu-toggle {
+    display: block;
+  }
+
+  /* ---------------------------------------------
+     MOBILE NAV MENU
+  --------------------------------------------- */
+
+  .hc-nav-links {
+    position: absolute;
+
+    top: calc(100% + 7px);
+
+    left: 3%;
+    right: 3%;
+
+    width: auto;
+
+    margin-left: 0;
+
+    padding: 11px;
+
+    display: none;
+
+    flex-direction: column;
+
+    align-items: stretch;
+
+    gap: 4px;
+
+    background: #ffffff;
+
+    border: 1px solid #e2e8f0;
+
+    border-radius: 17px;
+
+    box-shadow:
+      0 20px 45px rgba(15, 23, 42, 0.14),
+      0 5px 15px rgba(37, 99, 235, 0.06);
+
+    z-index: 9998;
+
+    box-sizing: border-box;
+  }
+
+  .hc-nav-links.hc-nav-active {
+    display: flex;
+
+    animation:
+      hcMobileMenu 0.25s ease;
+  }
+
+  @keyframes hcMobileMenu {
+
+    from {
+      opacity: 0;
+
+      transform:
+        translateY(-8px)
+        scale(0.99);
+    }
+
+    to {
+      opacity: 1;
+
+      transform:
+        translateY(0)
+        scale(1);
+    }
+  }
+
+  /* ---------------------------------------------
+     ALL MOBILE NAV ITEMS
+     IMPORTANT: SAME ALIGNMENT
+  --------------------------------------------- */
+
+  .hc-nav-links .hc-nav-link,
+  .hc-nav-links .hc-support-nav-btn {
+
+    width: 100% !important;
+
+    min-width: 100% !important;
+
+    max-width: 100% !important;
+
+    height: 46px;
+
+    min-height: 46px;
+
+    margin: 0 !important;
+
+    padding: 0 14px !important;
+
+    display: flex !important;
+
+    flex-direction: row !important;
+
+    align-items: center !important;
+
+    justify-content: flex-start !important;
+
+    gap: 12px !important;
+
+    box-sizing: border-box;
+
+    border: none;
+
+    border-radius: 11px;
+
+    background: transparent;
+
+    color: #475569;
+
+    font-family: inherit;
+
+    font-size: 14px;
+
+    font-weight: 650;
+
+    line-height: 1;
+
+    text-align: left;
+
+    text-decoration: none;
+
+    cursor: pointer;
+
+    transform: none;
+  }
+
+  /* ---------------------------------------------
+     MOBILE ICON ALIGNMENT
+  --------------------------------------------- */
+
+  .hc-nav-links .hc-nav-link > i,
+  .hc-nav-links .hc-support-nav-btn > i {
+
+    width: 22px !important;
+
+    min-width: 22px !important;
+
+    height: 22px;
+
+    display: flex !important;
+
+    align-items: center !important;
+
+    justify-content: center !important;
+
+    margin: 0 !important;
+
+    color: #64748b;
+
+    font-size: 17px;
+
+    text-align: center;
+
+    flex-shrink: 0;
+  }
+
+  /* ---------------------------------------------
+     MOBILE TEXT ALIGNMENT
+  --------------------------------------------- */
+
+  .hc-nav-links .hc-nav-link > span,
+  .hc-nav-links .hc-support-nav-btn > span {
+
+    flex: 1;
+
+    display: block;
+
+    width: auto;
+
+    margin: 0;
+
+    padding: 0;
+
+    color: inherit;
+
+    text-align: left;
+
+    line-height: 1.2;
+  }
+
+  /* ---------------------------------------------
+     HOVER
+  --------------------------------------------- */
+
+  .hc-nav-links .hc-nav-link:hover,
+  .hc-nav-links .hc-support-nav-btn:hover {
+
+    color: #2563eb;
+
+    background: #eff6ff;
+
+    transform: translateX(2px);
+  }
+
+  .hc-nav-links .hc-nav-link:hover > i,
+  .hc-nav-links .hc-support-nav-btn:hover > i {
+
+    color: #2563eb;
+  }
+
+  /* ---------------------------------------------
+     SUPPORT ACTIVE
+  --------------------------------------------- */
+
+  .hc-nav-links
+  .hc-support-nav-btn.hc-support-active {
+
+    color: #2563eb;
+
+    background: #eff6ff;
+  }
+
+  .hc-nav-links
+  .hc-support-nav-btn.hc-support-active > i {
+
+    color: #2563eb;
+  }
+
+  /* ---------------------------------------------
+     ADMIN / WORKER MOBILE LINK
+  --------------------------------------------- */
+
+  .hc-nav-links .hc-special-link {
+    background: #eff6ff;
+
+    color: #2563eb;
+  }
+
+  /* ---------------------------------------------
+     AUTH BUTTONS
+  --------------------------------------------- */
+
+  .hc-auth-buttons {
+
+    width: 100%;
+
+    margin: 5px 0 0;
+
+    padding-top: 5px;
+
+    display: flex;
+
+    flex-direction: column;
+
+    gap: 7px;
+
+    border-top: 1px solid #edf1f7;
+  }
+
+  .hc-login-btn,
+  .hc-register-btn {
+
+    width: 100%;
+
+    min-height: 44px;
+
+    box-sizing: border-box;
+  }
+
+  /* ---------------------------------------------
+     MOBILE PROFILE BUTTON
+  --------------------------------------------- */
+
+  .hc-profile-wrapper {
+
+    width: 100%;
+
+    margin: 4px 0 0;
+
+    padding-top: 6px;
+
+    border-top: 1px solid #edf1f7;
+  }
+
+  .hc-profile-btn {
+
+    width: 100%;
+
+    height: 48px;
+
+    justify-content: flex-start;
+
+    box-sizing: border-box;
+  }
+
+  .hc-user-name {
+    max-width: none;
+
+    flex: 1;
+
+    text-align: left;
+  }
+}
+
+/* =====================================================
+   MOBILE PROFILE DROPDOWN
+===================================================== */
+
+@media (max-width: 768px) {
+
+  .hc-profile-dropdown {
+
+    position: fixed;
+
+    top: 76px;
+
+    left: 12px;
+    right: 12px;
+
+    width: auto;
+
+    max-width: none;
+
+    max-height: calc(100vh - 90px);
+
+    overflow-y: auto;
+
+    padding: 0;
+
+    border-radius: 19px;
+
+    box-shadow:
+      0 24px 55px rgba(15, 23, 42, 0.17);
+
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .hc-profile-top {
+    padding: 18px;
+  }
+
+  .hc-profile-name-section h5 {
+    max-width: calc(100vw - 155px);
+
+    font-size: 16px;
+  }
+
+  .hc-profile-detail {
+    margin-left: 14px;
+    margin-right: 14px;
+  }
+
+  .hc-profile-action {
+    width: calc(100% - 28px);
+
+    margin-left: 14px;
+    margin-right: 14px;
+  }
+
+  .hc-profile-logout {
+    width: calc(100% - 28px);
+
+    margin-left: 14px;
+    margin-right: 14px;
+  }
+
+  .hc-profile-close {
+    width: calc(100% - 28px);
+
+    margin-left: 14px;
+    margin-right: 14px;
+  }
+}
+
+/* =====================================================
+   SMALL MOBILE
+===================================================== */
+
+@media (max-width: 450px) {
+
+  .hc-navbar-container {
+    width: 92%;
+  }
+
+  .hc-brand-name {
+    font-size: 20px;
+  }
+
+  .hc-logo-wrapper {
+    width: 37px;
+    height: 37px;
+  }
+
+  .hc-menu-toggle {
+    width: 40px;
+    height: 40px;
+  }
+
+  .hc-nav-links {
+    left: 3%;
+    right: 3%;
+
+    padding: 10px;
+
+    border-radius: 16px;
+  }
+
+  .hc-nav-links .hc-nav-link,
+  .hc-nav-links .hc-support-nav-btn {
+
+    height: 44px;
+
+    min-height: 44px;
+
+    padding: 0 13px !important;
+
+    gap: 11px !important;
+
+    font-size: 13.5px;
+  }
+
+  .hc-nav-links .hc-nav-link > i,
+  .hc-nav-links .hc-support-nav-btn > i {
+
+    width: 21px !important;
+
+    min-width: 21px !important;
+
+    font-size: 16px;
+  }
+
+  .hc-profile-dropdown {
+    top: 70px;
+
+    left: 8px;
+    right: 8px;
+
+    width: auto;
+
+    border-radius: 17px;
+  }
+
+  .hc-profile-top {
+    padding: 16px;
+  }
+
+  .hc-profile-avatar-container,
+  .hc-profile-avatar-large {
+    width: 60px;
+    height: 60px;
+  }
+
+  .hc-profile-avatar-large {
+    border-radius: 15px;
+  }
+
+  .hc-profile-avatar-large img {
+    border-radius: 12px;
+  }
+
+  .hc-profile-name-section h5 {
+    max-width: calc(100vw - 140px);
+
+    font-size: 15px;
+  }
+
+  .hc-profile-detail p {
+    font-size: 10.5px;
+  }
+}
+
+/* =====================================================
+   VERY SMALL PHONES
+===================================================== */
+
+@media (max-width: 360px) {
+
+  .hc-brand-name {
+    font-size: 18px;
+  }
+
+  .hc-logo-wrapper {
+    width: 35px;
+    height: 35px;
+  }
+
+  .hc-menu-toggle {
+    width: 38px;
+    height: 38px;
+
+    padding: 8px;
+  }
+
+  .hc-nav-links {
+    padding: 8px;
+  }
+
+  .hc-nav-links .hc-nav-link,
+  .hc-nav-links .hc-support-nav-btn {
+
+    height: 43px;
+
+    min-height: 43px;
+
+    font-size: 13px;
+
+    padding: 0 12px !important;
+  }
+}
+
+/* =====================================================
+   NOTIFICATION
+===================================================== */
+
+.hc-notification {
+  position: fixed;
+
+  top: 85px;
+  right: 25px;
+
+  min-width: 320px;
+  max-width: 420px;
+
+  display: flex;
+  align-items: center;
+
+  gap: 14px;
+
+  padding: 15px 18px;
+
+  background: #ffffff;
+
+  border-radius: 14px;
+
+  box-shadow:
+    0 10px 35px rgba(0, 0, 0, 0.15);
+
+  z-index: 99999;
+
+  animation:
+    hcNotificationSlide 0.35s ease;
+}
+
+.hc-notification-success {
+  border-left: 5px solid #22c55e;
+}
+
+.hc-notification-error {
+  border-left: 5px solid #ef4444;
+}
+
+.hc-notification-icon {
+  width: 38px;
+  height: 38px;
+
+  flex-shrink: 0;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 50%;
+
+  background: #dcfce7;
+
+  color: #16a34a;
+
+  font-size: 20px;
+
+  font-weight: bold;
+}
+
+.hc-notification-content {
+  flex: 1;
+
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+
+  min-width: 0;
+}
+
+.hc-notification-content strong {
+  font-size: 14px;
+
+  color: #111827;
+}
+
+.hc-notification-content span {
+  font-size: 13px;
+
+  color: #6b7280;
+
+  word-break: break-word;
+}
+
+.hc-notification-close {
+  border: none;
+
+  background: transparent;
+
+  font-size: 22px;
+
+  color: #9ca3af;
+
+  cursor: pointer;
+
+  line-height: 1;
+}
+
+.hc-notification-close:hover {
+  color: #111827;
+}
+
+@keyframes hcNotificationSlide {
+
+  from {
+    opacity: 0;
+
+    transform: translateX(40px);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: translateX(0);
+  }
+}
+
+/* =====================================================
+   NOTIFICATION MOBILE
+===================================================== */
+
+@media (max-width: 576px) {
+
+  .hc-notification {
+
+    top: 75px;
+
+    left: 15px;
+    right: 15px;
+
+    min-width: 0;
+
+    width: auto;
+
+    padding: 13px 14px;
+
+    gap: 10px;
+  }
+
+  .hc-notification-icon {
+
+    width: 34px;
+    height: 34px;
+
+    font-size: 17px;
+  }
+
+  .hc-notification-content strong {
+    font-size: 13px;
+  }
+
+  .hc-notification-content span {
+    font-size: 11px;
+  }
+}
+
+/* =========================================================
+   HIVECARE AI CHAT SUPPORT
+========================================================= */
+
+/* =========================================================
+   SUPPORT BUTTON
+========================================================= */
+
+.hc-support-nav-btn {
+  border: none;
+
+  background: transparent;
+
+  cursor: pointer;
+
+  font-family: inherit;
+
+  font-size: inherit;
+}
+
+.hc-support-nav-btn i {
+  transition:
+    transform 0.25s ease;
+}
+
+.hc-support-nav-btn:hover i {
+  transform: scale(1.15);
+}
+
+.hc-support-nav-btn.hc-support-active {
+  color: #2563eb;
+}
+
+/* =========================================================
+   CHAT OVERLAY
+========================================================= */
+
+.hc-chat-overlay {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 9998;
+
+  pointer-events: none;
+}
+
+.hc-chat-window {
+  position: fixed;
+
+  right: 28px;
+  bottom: 28px;
+
+  width: 390px;
+  height: 600px;
+
+  display: flex;
+  flex-direction: column;
+
+  background: #ffffff;
+
+  border-radius: 22px;
+
+  overflow: hidden;
+
+  border: 1px solid rgba(226, 232, 240, 0.9);
+
+  box-shadow:
+    0 25px 70px rgba(15, 23, 42, 0.25),
+    0 8px 30px rgba(37, 99, 235, 0.12);
+
+  pointer-events: auto;
+
+  animation:
+    hcChatOpen 0.25s ease-out;
+}
+
+@keyframes hcChatOpen {
+
+  from {
+    opacity: 0;
+
+    transform:
+      translateY(25px)
+      scale(0.96);
+  }
+
+  to {
+    opacity: 1;
+
+    transform:
+      translateY(0)
+      scale(1);
+  }
+}
+
+/* =========================================================
+   CHAT HEADER
+========================================================= */
+
+.hc-chat-header {
+  min-height: 76px;
+
+  padding: 14px 17px;
+
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+
+  background:
+    linear-gradient(
+      135deg,
+      #0f4cdb,
+      #2563eb,
+      #3b82f6
+    );
+
+  color: #ffffff;
+
+  box-sizing: border-box;
+}
+
+.hc-chat-brand {
+  display: flex;
+  align-items: center;
+
+  gap: 12px;
+
+  min-width: 0;
+}
+
+.hc-chat-avatar {
+  width: 44px;
+  height: 44px;
+
+  min-width: 44px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 14px;
+
+  background: rgba(255, 255, 255, 0.18);
+
+  color: #ffffff;
+
+  font-size: 20px;
+
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 255, 255, 0.18);
+}
+
+.hc-chat-brand > div:last-child {
+  display: flex;
+  flex-direction: column;
+
+  gap: 3px;
+
+  min-width: 0;
+}
+
+.hc-chat-brand strong {
+  font-size: 15px;
+
+  font-weight: 700;
+
+  white-space: nowrap;
+}
+
+.hc-chat-brand span {
+  font-size: 11px;
+
+  opacity: 0.9;
+}
+
+.hc-online-dot {
+  display: inline-block;
+
+  width: 7px;
+  height: 7px;
+
+  margin-right: 5px;
+
+  border-radius: 50%;
+
+  background: #4ade80;
+
+  box-shadow:
+    0 0 0 3px rgba(74, 222, 128, 0.15);
+}
+
+.hc-chat-close {
+  width: 36px;
+  height: 36px;
+
+  flex-shrink: 0;
+
+  border: none;
+
+  border-radius: 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: rgba(255, 255, 255, 0.13);
+
+  color: #ffffff;
+
+  cursor: pointer;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease;
+}
+
+.hc-chat-close:hover {
+  background: rgba(255, 255, 255, 0.23);
+
+  transform: rotate(4deg);
+}
+
+.hc-chat-close:disabled {
+  opacity: 0.5;
+
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   CHAT BODY
+========================================================= */
+
+.hc-chat-body {
+  flex: 1;
+
+  min-height: 0;
+
+  padding: 18px 15px;
+
+  overflow-y: auto;
+
+  background:
+    radial-gradient(
+      circle at top left,
+      rgba(219, 234, 254, 0.55),
+      transparent 35%
+    ),
+    #f8fafc;
+
+  scrollbar-width: thin;
+
+  scrollbar-color:
+    #cbd5e1
+    transparent;
+}
+
+.hc-chat-body::-webkit-scrollbar {
+  width: 5px;
+}
+
+.hc-chat-body::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.hc-chat-body::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+
+  border-radius: 20px;
+}
+
+/* =========================================================
+   CHAT MESSAGE ROW
+========================================================= */
+
+.hc-chat-message-row {
+  display: flex;
+
+  align-items: flex-end;
+
+  gap: 8px;
+
+  margin-bottom: 13px;
+}
+
+.hc-chat-bot-row {
+  justify-content: flex-start;
+}
+
+.hc-chat-user-row {
+  justify-content: flex-end;
+}
+
+.hc-message-avatar {
+  flex: 0 0 auto;
+
+  width: 30px;
+  height: 30px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 10px;
+
+  background: #dbeafe;
+
+  color: #2563eb;
+
+  font-size: 13px;
+}
+
+.hc-chat-message {
+  max-width: 78%;
+
+  padding: 11px 14px;
+
+  font-size: 13px;
+
+  line-height: 1.5;
+
+  word-break: break-word;
+}
+
+.hc-chat-bot-message {
+  background: #ffffff;
+
+  color: #334155;
+
+  border-radius:
+    5px
+    16px
+    16px
+    16px;
+
+  border: 1px solid #e2e8f0;
+
+  box-shadow:
+    0 3px 10px rgba(15, 23, 42, 0.04);
+}
+
+.hc-chat-user-message {
+  background: #2563eb;
+
+  color: #ffffff;
+
+  border-radius:
+    16px
+    5px
+    16px
+    16px;
+
+  box-shadow:
+    0 5px 15px rgba(37, 99, 235, 0.18);
+}
+
+/* =========================================================
+   TYPING INDICATOR
+========================================================= */
+
+.hc-typing {
+  display: flex;
+  align-items: center;
+
+  gap: 4px;
+
+  min-width: 58px;
+}
+
+.hc-typing span {
+  width: 6px;
+  height: 6px;
+
+  border-radius: 50%;
+
+  background: #94a3b8;
+
+  animation:
+    hcTyping 1.2s infinite ease-in-out;
+}
+
+.hc-typing span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+
+.hc-typing span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+@keyframes hcTyping {
+
+  0%,
+  60%,
+  100% {
+    transform: translateY(0);
+
+    opacity: 0.5;
+  }
+
+  30% {
+    transform: translateY(-4px);
+
+    opacity: 1;
+  }
+}
+
+/* =========================================================
+   QUICK QUESTIONS
+========================================================= */
+
+.hc-quick-questions {
+  display: flex;
+
+  gap: 7px;
+
+  padding: 10px 13px;
+
+  overflow-x: auto;
+
+  background: #ffffff;
+
+  border-top: 1px solid #eef2f7;
+
+  scrollbar-width: none;
+}
+
+.hc-quick-questions::-webkit-scrollbar {
+  display: none;
+}
+
+.hc-quick-questions button {
+  flex: 0 0 auto;
+
+  display: flex;
+  align-items: center;
+
+  gap: 6px;
+
+  padding: 8px 11px;
+
+  border: 1px solid #dbeafe;
+
+  border-radius: 20px;
+
+  background: #eff6ff;
+
+  color: #1d4ed8;
+
+  font-size: 11px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  white-space: nowrap;
+
+  transition:
+    background 0.2s ease,
+    transform 0.2s ease,
+    border-color 0.2s ease;
+}
+
+.hc-quick-questions button:hover {
+  background: #dbeafe;
+
+  border-color: #bfdbfe;
+
+  transform: translateY(-1px);
+}
+
+.hc-quick-questions i {
+  font-size: 12px;
+}
+
+/* =========================================================
+   CHAT INPUT
+========================================================= */
+
+.hc-chat-input-area {
+  display: flex;
+  align-items: center;
+
+  gap: 8px;
+
+  padding: 11px 12px;
+
+  background: #ffffff;
+
+  border-top: 1px solid #e2e8f0;
+}
+
+.hc-chat-input-area input {
+  flex: 1;
+
+  min-width: 0;
+
+  height: 43px;
+
+  padding: 0 14px;
+
+  border: 1px solid #dbe3ef;
+
+  border-radius: 14px;
+
+  outline: none;
+
+  background: #f8fafc;
+
+  color: #1e293b;
+
+  font-size: 13px;
+
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.hc-chat-input-area input:focus {
+  border-color: #60a5fa;
+
+  background: #ffffff;
+
+  box-shadow:
+    0 0 0 3px rgba(59, 130, 246, 0.10);
+}
+
+.hc-chat-input-area input::placeholder {
+  color: #94a3b8;
+}
+
+.hc-chat-input-area button {
+  flex: 0 0 auto;
+
+  width: 43px;
+  height: 43px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: none;
+
+  border-radius: 13px;
+
+  background: #2563eb;
+
+  color: #ffffff;
+
+  cursor: pointer;
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    opacity 0.2s ease;
+}
+
+.hc-chat-input-area button:hover:not(:disabled) {
+  background: #1d4ed8;
+
+  transform: translateY(-1px);
+}
+
+.hc-chat-input-area button:disabled {
+  opacity: 0.45;
+
+  cursor: not-allowed;
+}
+
+/* =========================================================
+   CHAT FOOTER
+========================================================= */
+
+.hc-chat-footer {
+  padding: 6px;
+
+  text-align: center;
+
+  background: #ffffff;
+
+  color: #94a3b8;
+
+  font-size: 9px;
+
+  border-top: 1px solid #f1f5f9;
+}
+
+/* =========================================================
+   MOBILE CHAT
+========================================================= */
+
+@media (max-width: 600px) {
+
+  .hc-chat-window {
+
+    top: 10px;
+    right: 10px;
+    bottom: 10px;
+    left: 10px;
+
+    width: auto;
+
+    height: auto;
+
+    max-height: calc(100vh - 20px);
+
+    border-radius: 20px;
+  }
+
+  .hc-chat-header {
+    min-height: 68px;
+
+    padding: 12px 14px;
+  }
+
+  .hc-chat-avatar {
+    width: 40px;
+    height: 40px;
+
+    min-width: 40px;
+
+    border-radius: 12px;
+
+    font-size: 18px;
+  }
+
+  .hc-chat-brand strong {
+    font-size: 14px;
+  }
+
+  .hc-chat-brand span {
+    font-size: 10px;
+  }
+
+  .hc-chat-body {
+    padding: 15px 12px;
+  }
+
+  .hc-chat-message {
+    max-width: 84%;
+
+    font-size: 12.5px;
+  }
+
+  .hc-quick-questions {
+    padding: 9px;
+  }
+
+  .hc-chat-input-area {
+    padding: 9px;
+  }
+
+  .hc-chat-input-area input {
+    height: 41px;
+  }
+
+  .hc-chat-input-area button {
+    width: 41px;
+    height: 41px;
+  }
+}
+
+/* =========================================================
+   VERY SMALL CHAT SCREENS
+========================================================= */
+
+@media (max-width: 380px) {
+
+  .hc-chat-window {
+    top: 6px;
+    right: 6px;
+    bottom: 6px;
+    left: 6px;
+
+    max-height: calc(100vh - 12px);
+
+    border-radius: 17px;
+  }
+
+  .hc-chat-header {
+    min-height: 62px;
+  }
+
+  .hc-chat-message {
+    max-width: 88%;
+
+    padding: 9px 11px;
+
+    font-size: 12px;
+  }
+
+  .hc-message-avatar {
+    width: 27px;
+    height: 27px;
+
+    border-radius: 8px;
+
+    font-size: 11px;
+  }
+
+  .hc-chat-input-area input {
+    font-size: 12px;
+  }
+}
+
+/* =====================================================
+   PROFILE IMAGE PREVIEW MODAL
+===================================================== */
+
+.hc-profile-image-modal {
+  position: fixed;
+
+  inset: 0;
+
+  z-index: 99999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 25px;
+
+  background:
+    rgba(15, 23, 42, 0.72);
+
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+
+  animation:
+    hcImageModalFade 0.2s ease;
+}
+
+.hc-profile-image-preview {
+  position: relative;
+
+  width: min(420px, 90vw);
+  height: min(420px, 90vw);
+
+  padding: 6px;
+
+  background: #ffffff;
+
+  border-radius: 22px;
+
+  box-shadow:
+    0 25px 70px rgba(0, 0, 0, 0.30);
+
+  animation:
+    hcImagePreviewOpen 0.25s ease;
+}
+
+.hc-profile-image-preview img {
+  width: 100%;
+  height: 100%;
+
+  display: block;
+
+  object-fit: cover;
+
+  border-radius: 17px;
+}
+
+/* =====================================================
+   PROFILE IMAGE CLOSE
+===================================================== */
+
+.hc-profile-image-close {
+  position: absolute;
+
+  top: -14px;
+  right: -14px;
+
+  width: 38px;
+  height: 38px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border: 3px solid #ffffff;
+
+  border-radius: 50%;
+
+  background: #2563eb;
+
+  color: #ffffff;
+
+  font-size: 14px;
+
+  cursor: pointer;
+
+  box-shadow:
+    0 6px 18px rgba(15, 23, 42, 0.25);
+
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease;
+}
+
+.hc-profile-image-close:hover {
+  background: #1d4ed8;
+
+  transform: scale(1.08);
+}
+
+@keyframes hcImageModalFade {
+
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes hcImagePreviewOpen {
+
+  from {
+    opacity: 0;
+
+    transform: scale(0.88);
+  }
+
+  to {
+    opacity: 1;
+
+    transform: scale(1);
+  }
+}
+
+/* =====================================================
+   PROFILE IMAGE MODAL MOBILE
+===================================================== */
+
+@media (max-width: 600px) {
+
+  .hc-profile-image-modal {
+    padding: 20px;
+  }
+
+  .hc-profile-image-preview {
+    width: min(360px, 86vw);
+
+    height: min(360px, 86vw);
+
+    border-radius: 19px;
+  }
+
+  .hc-profile-image-preview img {
+    border-radius: 14px;
+  }
+
+  .hc-profile-image-close {
+    top: -10px;
+    right: -10px;
+
+    width: 35px;
+    height: 35px;
+  }
+}

@@ -1,0 +1,171 @@
+
+/* =========================================================
+   HIVECARE SERVICE CARD
+   BOOK NOW BUTTON
+========================================================= */
+
+.service-card {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+}
+
+/* =========================================================
+   ICON
+========================================================= */
+
+.service-card .services-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+/* =========================================================
+   TITLE
+========================================================= */
+
+.service-card h5 {
+  margin: 4px 0 10px;
+  color: #183553;
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1.25;
+}
+
+/* =========================================================
+   DESCRIPTION
+========================================================= */
+
+.service-card p {
+  margin: 0;
+  color: #7c8da1;
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+/* =========================================================
+   BOOK NOW BUTTON
+========================================================= */
+
+.service-book-btn {
+  width: 100%;
+  min-height: 44px;
+
+  margin-top: 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  padding: 11px 16px;
+
+  border: none;
+  border-radius: 11px;
+
+  background: linear-gradient(
+    135deg,
+    #0878cf,
+    #36b8f4
+  );
+
+  color: #ffffff !important;
+
+  text-decoration: none !important;
+
+  font-size: 13px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  position: relative;
+  z-index: 20;
+
+  box-shadow:
+    0 7px 18px rgba(8, 120, 207, 0.22);
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease,
+    background 0.25s ease;
+}
+
+/* =========================================================
+   BOOK NOW HOVER
+========================================================= */
+
+.service-book-btn:hover {
+  color: #ffffff !important;
+  text-decoration: none !important;
+
+  transform: translateY(-2px);
+
+  background: linear-gradient(
+    135deg,
+    #066ab8,
+    #24aeea
+  );
+
+  box-shadow:
+    0 10px 25px rgba(8, 120, 207, 0.30);
+}
+
+/* =========================================================
+   ARROW
+========================================================= */
+
+.service-book-btn i {
+  font-size: 14px;
+
+  transition:
+    transform 0.25s ease;
+}
+
+.service-book-btn:hover i {
+  transform: translate(
+    3px,
+    -3px
+  );
+}
+
+/* =========================================================
+   MOBILE
+========================================================= */
+
+@media (max-width: 575px) {
+
+  .service-card h5 {
+    font-size: 19px;
+  }
+
+  .service-card p {
+    font-size: 13px;
+  }
+
+  .service-book-btn {
+    min-height: 43px;
+    padding: 10px 14px;
+    font-size: 12px;
+    margin-top: 18px;
+  }
+}
+
+/* =========================================================
+   SMALL MOBILE
+========================================================= */
+
+@media (max-width: 380px) {
+
+  .service-card h5 {
+    font-size: 18px;
+  }
+
+  .service-book-btn {
+    min-height: 41px;
+    padding: 9px 12px;
+    font-size: 11px;
+  }
+}
+
