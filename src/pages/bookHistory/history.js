@@ -37,6 +37,9 @@ const { user, loading: authLoading } = useAuth();
 
   const [cancelling, setCancelling] = useState(null);
 
+  const [cancelBookingId, setCancelBookingId] = useState(null);
+const [showCancelPopup, setShowCancelPopup] = useState(false);
+
   // =====================================================
   // REVIEW STATE
   // =====================================================
@@ -897,87 +900,91 @@ const { user, loading: authLoading } = useAuth();
     );
   };
 
-  // =====================================================
-  // CANCEL BOOKING
-  // =====================================================
+ // =====================================================
+// OPEN CANCEL CONFIRMATION POPUP
+// =====================================================
 
-  const handleCancelBooking = async (
-    bookingId
-  ) => {
-    const confirmCancel =
-      window.confirm(
-        "Are you sure you want to cancel this booking?\n\n" +
-        "The booking will remain in your booking history, " +
-        "but its status will become CANCELLED."
+const handleCancelBooking = (bookingId) => {
+  if (cancelling !== null) {
+    return;
+  }
+
+  setCancelBookingId(bookingId);
+  setShowCancelPopup(true);
+};
+
+// =====================================================
+// CLOSE CANCEL CONFIRMATION POPUP
+// =====================================================
+
+const closeCancelPopup = () => {
+  if (cancelling !== null) {
+    return;
+  }
+
+  setShowCancelPopup(false);
+  setCancelBookingId(null);
+};
+
+// =====================================================
+// CONFIRM CANCEL BOOKING
+// =====================================================
+
+const confirmCancelBooking = async () => {
+  if (!cancelBookingId) {
+    return;
+  }
+
+  try {
+    setCancelling(cancelBookingId);
+
+    const response =
+      await cancelBooking(
+        cancelBookingId
       );
 
-    if (!confirmCancel) {
-      return;
-    }
+    // =================================================
+    // UPDATE UI IMMEDIATELY
+    // =================================================
 
-    try {
-      setCancelling(bookingId);
-
-      console.log(
-        "Cancelling booking:",
-        bookingId
-      );
-
-      const response =
-        await cancelBooking(
-          bookingId
-        );
-
-      console.log(
-        "Cancel response:",
-        response.data
-      );
-
-      // =================================================
-      // UPDATE UI IMMEDIATELY
-      // =================================================
-
-      setBookings(
-        (prevBookings) =>
-          prevBookings.map(
-            (booking) =>
-              booking.id === bookingId
-                ? {
+    setBookings(
+      (prevBookings) =>
+        prevBookings.map(
+          (booking) =>
+            booking.id === cancelBookingId
+              ? {
                   ...booking,
-                  status:
-                    "CANCELLED"
+                  status: "CANCELLED"
                 }
-                : booking
-          )
-      );
+              : booking
+        )
+    );
 
-      showNotification(
-        "success",
-        "Booking Cancelled",
-        "Your booking has been cancelled successfully."
-      );
-    } catch (error) {
-      console.error(
-        "Cancel booking error:",
-        error
-      );
+    // Close popup
+    setShowCancelPopup(false);
+    setCancelBookingId(null);
 
-      console.error(
-        "Backend response:",
-        error.response?.data
-      );
+    // Success notification
+    showNotification(
+      "success",
+      "Booking Cancelled",
+      "Your booking has been cancelled successfully."
+    );
 
-      showNotification(
-        "error",
-        "Cancellation Failed",
-        error.response?.data?.message ||
-        error.response?.data ||
-        "Unable to cancel booking."
-      );
-    } finally {
-      setCancelling(null);
-    }
-  };
+  } catch (error) {
+
+    showNotification(
+      "error",
+      "Cancellation Failed",
+      error.response?.data?.message ||
+      error.response?.data ||
+      "Unable to cancel booking."
+    );
+
+  } finally {
+    setCancelling(null);
+  }
+};
 
   // =====================================================
   // EDIT BOOKING
@@ -2223,7 +2230,98 @@ const { user, loading: authLoading } = useAuth();
         )}
 
       </div>
+        {/* =================================================
+    CANCEL CONFIRMATION POPUP
+================================================= */}
 
+{showCancelPopup && (
+
+  <div
+    className="cancel-confirm-overlay"
+    onClick={(e) => {
+      if (
+        e.target === e.currentTarget &&
+        cancelling === null
+      ) {
+        closeCancelPopup();
+      }
+    }}
+  >
+
+    <div className="cancel-confirm-modal">
+
+      {/* ICON */}
+
+      <div className="cancel-confirm-icon">
+        <i className="bi bi-exclamation-triangle-fill"></i>
+      </div>
+
+      {/* CONTENT */}
+
+      <div className="cancel-confirm-content">
+
+        <h3>
+          Cancel Booking?
+        </h3>
+
+        <p>
+          Are you sure you want to cancel this booking?
+        </p>
+
+        <span>
+          The booking will remain in your booking
+          history, but its status will become
+          <strong> CANCELLED</strong>.
+        </span>
+
+      </div>
+
+      {/* ACTIONS */}
+
+      <div className="cancel-confirm-actions">
+
+        <button
+          type="button"
+          className="cancel-confirm-no"
+          onClick={closeCancelPopup}
+          disabled={cancelling !== null}
+        >
+          <i className="bi bi-arrow-left"></i>
+          Keep Booking
+        </button>
+
+        <button
+          type="button"
+          className="cancel-confirm-yes"
+          onClick={confirmCancelBooking}
+          disabled={cancelling !== null}
+        >
+
+          {cancelling !== null ? (
+
+            <>
+              <span className="spinner-border spinner-border-sm"></span>
+              Cancelling...
+            </>
+
+          ) : (
+
+            <>
+              <i className="bi bi-x-circle-fill"></i>
+              Yes, Cancel
+            </>
+
+          )}
+
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+)}
       {/* =================================================
           REVIEW MODAL
       ================================================= */}

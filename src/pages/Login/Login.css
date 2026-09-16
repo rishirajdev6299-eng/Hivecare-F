@@ -7,6 +7,10 @@
   box-sizing: border-box;
 }
 
+/* =========================================================
+   PAGE
+========================================================= */
+
 .hive-login-page {
   min-height: 100vh;
   width: 100%;
@@ -17,9 +21,22 @@
   position: relative;
   overflow: hidden;
   background:
-    radial-gradient(circle at 10% 10%, rgba(37, 99, 235, 0.15), transparent 30%),
-    radial-gradient(circle at 90% 90%, rgba(14, 165, 233, 0.14), transparent 30%),
-    linear-gradient(135deg, #eef6ff 0%, #f8fbff 50%, #edf5ff 100%);
+    radial-gradient(
+      circle at 10% 10%,
+      rgba(37, 99, 235, 0.15),
+      transparent 30%
+    ),
+    radial-gradient(
+      circle at 90% 90%,
+      rgba(14, 165, 233, 0.14),
+      transparent 30%
+    ),
+    linear-gradient(
+      135deg,
+      #eef6ff 0%,
+      #f8fbff 50%,
+      #edf5ff 100%
+    );
 }
 
 /* =========================================================
@@ -103,8 +120,6 @@
       #087fc7 100%
     );
 }
-
-/* decorative circles */
 
 .hive-login-intro::before {
   content: "";
@@ -289,18 +304,21 @@
 ========================================================= */
 
 .hive-social-login {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  margin-bottom: 22px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  margin: 0 auto 22px;
 }
 
 .hive-social-button {
-  height: 48px;
+  height: 52px;
+  min-height: 52px;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 9px;
+  gap: 10px;
   padding: 0 12px;
   border-radius: 12px;
   cursor: pointer;
@@ -521,6 +539,33 @@
 }
 
 /* =========================================================
+   FORGOT PASSWORD
+========================================================= */
+
+.hive-forgot-password {
+  display: flex;
+  justify-content: flex-end;
+  margin-top: -8px;
+  margin-bottom: 18px;
+}
+
+.hive-forgot-password button {
+  border: none;
+  background: transparent;
+  color: #2563eb;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  padding: 4px 0;
+  transition: 0.25s ease;
+}
+
+.hive-forgot-password button:hover {
+  color: #1d4ed8;
+  text-decoration: underline;
+}
+
+/* =========================================================
    LOGIN BUTTON
 ========================================================= */
 
@@ -632,25 +677,39 @@
 }
 
 /* =========================================================
-   NOTIFICATION
+   LOGIN SUCCESS / ERROR NOTIFICATION
 ========================================================= */
 
 .hive-login-notification {
-  position: fixed;
-  top: 25px;
-  right: 25px;
-  z-index: 9999;
+  position: fixed !important;
+  top: 25px !important;
+  right: 25px !important;
+
   width: min(390px, calc(100vw - 30px));
-  display: flex;
+
+  display: flex !important;
   align-items: center;
   gap: 13px;
+
   padding: 15px 16px;
+
   border-radius: 16px;
-  background: white;
+
+  background: #ffffff !important;
   border: 1px solid #e2e8f0;
+
   box-shadow:
-    0 20px 50px rgba(15, 23, 42, 0.16);
-  animation: hiveNotificationIn 0.35s ease;
+    0 20px 50px rgba(15, 23, 42, 0.20),
+    0 5px 15px rgba(15, 23, 42, 0.10);
+
+  opacity: 1 !important;
+  visibility: visible !important;
+
+  z-index: 2147483647 !important;
+
+  pointer-events: auto;
+
+  animation: hiveNotificationIn 0.35s ease both;
 }
 
 @keyframes hiveNotificationIn {
@@ -665,38 +724,46 @@
   }
 }
 
+/* =========================================================
+   NOTIFICATION ICON
+========================================================= */
+
 .hive-notification-icon {
   width: 38px;
   height: 38px;
   flex-shrink: 0;
+
   display: flex;
   align-items: center;
   justify-content: center;
+
   border-radius: 12px;
   font-size: 16px;
 }
 
-.hive-login-notification.success
-  .hive-notification-icon {
+.hive-login-notification.success .hive-notification-icon {
   color: #15803d;
   background: #dcfce7;
 }
 
-.hive-login-notification.error
-  .hive-notification-icon {
+.hive-login-notification.error .hive-notification-icon {
   color: #dc2626;
   background: #fee2e2;
 }
 
-.hive-login-notification.warning
-  .hive-notification-icon {
+.hive-login-notification.warning .hive-notification-icon {
   color: #ca8a04;
   background: #fef9c3;
 }
 
+/* =========================================================
+   NOTIFICATION CONTENT
+========================================================= */
+
 .hive-notification-content {
   min-width: 0;
   flex: 1;
+
   display: flex;
   flex-direction: column;
   gap: 3px;
@@ -713,7 +780,12 @@
   color: #64748b;
   font-size: 11px;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
+
+/* =========================================================
+   NOTIFICATION CLOSE
+========================================================= */
 
 .hive-notification-close {
   width: 30px;
@@ -722,11 +794,15 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+
   border: 0;
   border-radius: 8px;
+
   cursor: pointer;
+
   color: #64748b;
   background: transparent;
+
   font-size: 18px;
 }
 
@@ -736,11 +812,217 @@
 }
 
 /* =========================================================
+   FORGOT PASSWORD OVERLAY
+========================================================= */
+
+.hive-forgot-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 99999;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  background: rgba(15, 23, 42, 0.62);
+  backdrop-filter: blur(8px);
+}
+
+/* =========================================================
+   FORGOT PASSWORD MODAL
+========================================================= */
+
+.hive-forgot-modal {
+  position: relative;
+
+  width: 100%;
+  max-width: 450px;
+
+  padding: 40px;
+
+  background: #ffffff;
+  border-radius: 24px;
+
+  box-shadow:
+    0 30px 80px rgba(15, 23, 42, 0.25);
+
+  animation: hiveForgotAppear 0.3s ease;
+}
+
+@keyframes hiveForgotAppear {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+/* =========================================================
+   FORGOT CLOSE
+========================================================= */
+
+.hive-forgot-close {
+  position: absolute;
+  top: 16px;
+  right: 18px;
+
+  width: 35px;
+  height: 35px;
+
+  border: none;
+  border-radius: 50%;
+
+  background: #f1f5f9;
+  color: #64748b;
+
+  font-size: 24px;
+  cursor: pointer;
+
+  transition: 0.25s ease;
+}
+
+.hive-forgot-close:hover {
+  background: #fee2e2;
+  color: #dc2626;
+}
+
+/* =========================================================
+   FORGOT ICON
+========================================================= */
+
+.hive-forgot-icon {
+  width: 70px;
+  height: 70px;
+
+  margin: 0 auto 20px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #4f46e5
+    );
+
+  color: #ffffff;
+
+  font-size: 30px;
+
+  box-shadow:
+    0 12px 30px rgba(37, 99, 235, 0.25);
+}
+
+.hive-forgot-modal h2 {
+  margin: 0;
+  text-align: center;
+  font-size: 28px;
+  color: #0f172a;
+}
+
+.hive-forgot-modal > p {
+  margin: 12px 0 28px;
+  text-align: center;
+  color: #64748b;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   FORGOT SEND BUTTON
+========================================================= */
+
+.hive-forgot-submit {
+  width: 100%;
+  min-height: 52px;
+
+  border: none;
+  border-radius: 12px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #2563eb,
+      #4f46e5
+    );
+
+  color: #ffffff;
+
+  font-size: 15px;
+  font-weight: 700;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 10px;
+
+  box-shadow:
+    0 10px 25px rgba(37, 99, 235, 0.25);
+
+  transition: 0.25s ease;
+}
+
+.hive-forgot-submit:hover {
+  transform: translateY(-2px);
+
+  box-shadow:
+    0 14px 30px rgba(37, 99, 235, 0.35);
+}
+
+.hive-forgot-submit:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* =========================================================
+   FORGOT BACK
+========================================================= */
+
+.hive-forgot-back {
+  width: 100%;
+
+  margin-top: 18px;
+
+  border: none;
+  background: transparent;
+
+  color: #64748b;
+
+  font-size: 14px;
+  font-weight: 600;
+
+  cursor: pointer;
+
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  gap: 8px;
+}
+
+.hive-forgot-back:hover {
+  color: #2563eb;
+}
+
+/* =========================================================
    TABLET
 ========================================================= */
 
 @media (max-width: 950px) {
-
   .hive-login-wrapper {
     grid-template-columns: 1fr;
     max-width: 620px;
@@ -782,8 +1064,19 @@
    MOBILE
 ========================================================= */
 
-@media (max-width: 600px) {
+@media (max-width: 768px) {
+  .hive-social-login {
+    flex-direction: column;
+    gap: 12px;
+  }
 
+  .hive-social-button {
+    width: 100%;
+    max-width: 320px;
+  }
+}
+
+@media (max-width: 600px) {
   .hive-login-page {
     padding: 15px;
   }
@@ -842,18 +1135,19 @@
     font-size: 26px;
   }
 
-  .hive-social-login {
-    grid-template-columns: 1fr;
-    gap: 9px;
-  }
-
-  .hive-social-button {
-    height: 47px;
-  }
-
   .hive-login-notification {
-    top: 15px;
-    right: 15px;
+    top: 15px !important;
+    right: 15px !important;
+    width: calc(100vw - 30px);
+  }
+
+  .hive-forgot-modal {
+    padding: 32px 22px;
+    border-radius: 20px;
+  }
+
+  .hive-forgot-modal h2 {
+    font-size: 24px;
   }
 }
 
@@ -862,7 +1156,6 @@
 ========================================================= */
 
 @media (max-width: 380px) {
-
   .hive-login-card {
     padding: 25px 17px;
   }
@@ -877,319 +1170,10 @@
 }
 
 /* =========================================================
-   CENTER GOOGLE + APPLE LOGIN BUTTONS
+   NOTIFICATION EXTRA SAFETY
 ========================================================= */
 
-.hive-social-login {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 14px;
-  width: 100%;
-  margin: 0 auto;
-}
-
-.hive-social-button {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 10px;
-  min-height: 52px;
-}
-
-/* Desktop */
-@media (min-width: 769px) {
-
-  .hive-social-button {
-    width: 230px;
-  }
-
-}
-
-/* Mobile */
-@media (max-width: 768px) {
-
-  .hive-social-login {
-    flex-direction: column;
-    gap: 12px;
-  }
-
-  .hive-social-button {
-    width: 100%;
-    max-width: 320px;
-  }
-
-}
-
-/* =====================================================
-   FORGOT PASSWORD
-===================================================== */
-
-.hive-forgot-password {
-  display: flex;
-  justify-content: flex-end;
-  margin-top: -8px;
-  margin-bottom: 18px;
-}
-
-.hive-forgot-password button {
-  border: none;
-  background: transparent;
-  color: #2563eb;
-  font-size: 13px;
-  font-weight: 700;
-  cursor: pointer;
-  padding: 4px 0;
-  transition: 0.25s ease;
-}
-
-.hive-forgot-password button:hover {
-  color: #1d4ed8;
-  text-decoration: underline;
-}
-
-
-/* =====================================================
-   OVERLAY
-===================================================== */
-
-.hive-forgot-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 99999;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  padding: 20px;
-
-  background: rgba(15, 23, 42, 0.62);
-
-  backdrop-filter: blur(8px);
-}
-
-
-/* =====================================================
-   MODAL
-===================================================== */
-
-.hive-forgot-modal {
-  position: relative;
-
-  width: 100%;
-  max-width: 450px;
-
-  padding: 40px;
-
-  background: #ffffff;
-
-  border-radius: 24px;
-
-  box-shadow:
-    0 30px 80px rgba(15, 23, 42, 0.25);
-
-  animation: hiveForgotAppear 0.3s ease;
-}
-
-@keyframes hiveForgotAppear {
-
-  from {
-    opacity: 0;
-    transform: translateY(20px) scale(.97);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0) scale(1);
-  }
-
-}
-
-
-/* =====================================================
-   CLOSE
-===================================================== */
-
-.hive-forgot-close {
-  position: absolute;
-
-  top: 16px;
-  right: 18px;
-
-  width: 35px;
-  height: 35px;
-
-  border: none;
-  border-radius: 50%;
-
-  background: #f1f5f9;
-
-  color: #64748b;
-
-  font-size: 24px;
-
-  cursor: pointer;
-
-  transition: .25s ease;
-}
-
-.hive-forgot-close:hover {
-  background: #fee2e2;
-  color: #dc2626;
-}
-
-
-/* =====================================================
-   ICON
-===================================================== */
-
-.hive-forgot-icon {
-  width: 70px;
-  height: 70px;
-
-  margin: 0 auto 20px;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  border-radius: 20px;
-
-  background:
-    linear-gradient(
-      135deg,
-      #2563eb,
-      #4f46e5
-    );
-
-  color: #ffffff;
-
-  font-size: 30px;
-
-  box-shadow:
-    0 12px 30px rgba(37, 99, 235, .25);
-}
-
-.hive-forgot-modal h2 {
-  margin: 0;
-
-  text-align: center;
-
-  font-size: 28px;
-
-  color: #0f172a;
-}
-
-.hive-forgot-modal > p {
-  margin: 12px 0 28px;
-
-  text-align: center;
-
-  color: #64748b;
-
-  font-size: 14px;
-
-  line-height: 1.6;
-}
-
-
-/* =====================================================
-   SEND BUTTON
-===================================================== */
-
-.hive-forgot-submit {
-  width: 100%;
-
-  min-height: 52px;
-
-  border: none;
-  border-radius: 12px;
-
-  background:
-    linear-gradient(
-      135deg,
-      #2563eb,
-      #4f46e5
-    );
-
-  color: #ffffff;
-
-  font-size: 15px;
-  font-weight: 700;
-
-  cursor: pointer;
-
-  display: flex;
-  align-items: center;
-  justify-content: center;
-
-  gap: 10px;
-
-  box-shadow:
-    0 10px 25px rgba(37, 99, 235, .25);
-
-  transition: .25s ease;
-}
-
-.hive-forgot-submit:hover {
-  transform: translateY(-2px);
-
-  box-shadow:
-    0 14px 30px rgba(37, 99, 235, .35);
-}
-
-.hive-forgot-submit:disabled {
-  opacity: .65;
-  cursor: not-allowed;
-  transform: none;
-}
-
-
-/* =====================================================
-   BACK
-===================================================== */
-
-.hive-forgot-back {
-  width: 100%;
-
-  margin-top: 18px;
-
-  border: none;
-  background: transparent;
-
-  color: #64748b;
-
-  font-size: 14px;
-  font-weight: 600;
-
-  cursor: pointer;
-
-  display: flex;
-  justify-content: center;
-  align-items: center;
-
-  gap: 8px;
-}
-
-.hive-forgot-back:hover {
-  color: #2563eb;
-}
-
-
-/* =====================================================
-   MOBILE
-===================================================== */
-
-@media (max-width: 500px) {
-
-  .hive-forgot-modal {
-    padding: 32px 22px;
-    border-radius: 20px;
-  }
-
-  .hive-forgot-modal h2 {
-    font-size: 24px;
-  }
-
+body > .hive-login-notification {
+  position: fixed !important;
+  z-index: 2147483647 !important;
 }

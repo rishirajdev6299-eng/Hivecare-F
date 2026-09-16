@@ -1,582 +1,106 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuth } from "../../context/AuthContext";
 import logo from "../../assets/images/logo 3.png";
 import "./Navbar.css";
+
 import {
   sendChatMessage as sendChatMessageAPI,
   getUserById,
   updateProfileImage
 } from "../../api/api";
-function Navbar() {
-  const { user, logout } = useAuth();
-  
 
+const Navbar = () => {
+  const { user, logout } = useAuth();
+  const navigate = useNavigate();
+
+  // =========================================================
+  // STATES
+  // =========================================================
 
   const [scrolled, setScrolled] = useState(false);
+
   const [menuOpen, setMenuOpen] = useState(false);
+
   const [searchTerm, setSearchTerm] = useState("");
-  const [showProfile, setShowProfile] = useState(false);
-
-  /* =========================
-     SEARCH SUGGESTIONS
-  ========================= */
-
   const [showSearchSuggestions, setShowSearchSuggestions] =
     useState(false);
 
+  // Desktop profile
+  const [showProfile, setShowProfile] = useState(false);
+
+  // Mobile profile
+  const [mobileProfileOpen, setMobileProfileOpen] =
+    useState(false);
+
   const [profileImage, setProfileImage] = useState("");
-const [showProfileImagePreview, setShowProfileImagePreview] = useState(false);
-  // =========================
-  // HIVECARE CHAT SUPPORT
-  // =========================
+
+  const [showProfileImagePreview, setShowProfileImagePreview] =
+    useState(false);
+
   const [showChat, setShowChat] = useState(false);
   const [chatMessage, setChatMessage] = useState("");
+  const [chatMessages, setChatMessages] = useState([]);
   const [chatLoading, setChatLoading] = useState(false);
-
-  const [chatMessages, setChatMessages] = useState([
-    {
-      sender: "bot",
-      message:
-        "Hi! 👋 Welcome to HiveCare Support. How can I help you today?",
-    },
-  ]);
-
-  const chatBodyRef = useRef(null);
-
-  // =========================
-  // NOTIFICATION
-  // =========================
 
   const [notification, setNotification] = useState({
     show: false,
     type: "",
-    message: "",
+    message: ""
   });
 
   const [loggingOut, setLoggingOut] = useState(false);
 
-  const navigate = useNavigate();
+  // =========================================================
+  // REFS
+  // =========================================================
 
-  // =========================
-  // GET USER
-  // =========================
+  const profileWrapperRef = useRef(null);
+  const profileDropdownRef = useRef(null);
+  const chatBodyRef = useRef(null);
 
-  const role = user?.role?.toUpperCase();
+  const notificationTimerRef = useRef(null);
+  const logoutTimerRef = useRef(null);
 
-  // =====================================================
-// LOAD CURRENT USER PROFILE IMAGE FROM DATABASE
-// =====================================================
+  // =========================================================
+  // USER ROLE
+  // =========================================================
 
-useEffect(() => {
+  const role = String(user?.role || "USER").toUpperCase();
 
-  if (!user?.id) {
-    setProfileImage("");
-    return;
-  }
+  // =========================================================
+  // USER NAME
+  // =========================================================
 
-  getUserById(user.id)
-    .then((res) => {
+  const userName = String(user?.name || "User").trim();
 
-      const image = res.data?.profileImage || "";
+  const userInitial =
+    userName.length > 0
+      ? userName.charAt(0).toUpperCase()
+      : "U";
 
-      setProfileImage(image);
+  // =========================================================
+  // SEARCH SUGGESTIONS
+  // =========================================================
 
-    })
-    .catch((error) => {
-
-      console.error(
-        "Unable to load profile image:",
-        error
-      );
-
-      setProfileImage("");
-    });
-
-}, [user?.id]);
-
-  // =========================
-  // SHOW NOTIFICATION
-  // =========================
-
-  const showNotification = (message, type = "success") => {
-    setNotification({
-      show: true,
-      type,
-      message,
-    });
-
-    setTimeout(() => {
-      setNotification({
-        show: false,
-        type: "",
-        message: "",
-      });
-    }, 3000);
-  };
-
- // =====================================================
-// PROFILE IMAGE UPLOAD
-// =====================================================
-
-const handleProfileImageUpload = (e) => {
-
-  const file = e.target.files?.[0];
-
-  if (!file) return;
-
-  // ===================================================
-  // CHECK USER
-  // ===================================================
-
-  if (!user?.id) {
-
-    showNotification(
-      "Please login before uploading a profile picture.",
-      "error"
-    );
-
-    e.target.value = "";
-    return;
-  }
-
-  // ===================================================
-  // ONLY IMAGE FILES
-  // ===================================================
-
-  if (!file.type.startsWith("image/")) {
-
-    showNotification(
-      "Please select a valid image file.",
-      "error"
-    );
-
-    e.target.value = "";
-    return;
-  }
-
-  // ===================================================
-  // MAX 5 MB
-  // ===================================================
-
-  if (file.size > 5 * 1024 * 1024) {
-
-    showNotification(
-      "Image size must be less than 5 MB.",
-      "error"
-    );
-
-    e.target.value = "";
-    return;
-  }
-
-  // ===================================================
-  // READ IMAGE
-  // ===================================================
-
-  const reader = new FileReader();
-
-  reader.onload = async () => {
-
-    const imageData = reader.result;
-
-    try {
-
-      // =================================================
-      // SAVE IMAGE TO DATABASE
-      // =================================================
-
-      await updateProfileImage(
-        user.id,
-        imageData
-      );
-
-      // =================================================
-      // UPDATE NAVBAR IMMEDIATELY
-      // =================================================
-
-      setProfileImage(imageData);
-
-      showNotification(
-        "Profile image updated successfully!",
-        "success"
-      );
-
-    } catch (error) {
-
-      console.error(
-        "Profile image upload failed:",
-        error
-      );
-
-      showNotification(
-        error.response?.data ||
-        "Unable to upload profile image.",
-        "error"
-      );
-
-    }
-
-  };
-
-  reader.onerror = () => {
-
-    showNotification(
-      "Unable to read image.",
-      "error"
-    );
-
-  };
-
-  reader.readAsDataURL(file);
-
-  // ===================================================
-  // ALLOW SAME IMAGE TO BE SELECTED AGAIN
-  // ===================================================
-
-  e.target.value = "";
-};
-  // =========================
-  // LOGOUT
-  // =========================
-
-  const handleLogout = () => {
-    if (loggingOut) return;
-
-    setLoggingOut(true);
-    setShowProfile(false);
-    setMenuOpen(false);
-    setShowChat(false);
-
-    logout();
-
-    setNotification({
-      show: true,
-      type: "success",
-      message: "Logged out successfully!",
-    });
-
-    setTimeout(() => {
-      setNotification({
-        show: false,
-        type: "",
-        message: "",
-      });
-
-      navigate("/login", {
-        replace: true,
-        state: null,
-      });
-    }, 1800);
-  };
-  /* =========================================================
-    HIVECARE SERVICE LIST
-    Main Services + Subservices
- ========================================================= */
-
-
-  const serviceSuggestions = [
-    {
-      name: "Plumber",
-      icon: "bi-wrench-adjustable",
-      category: "Plumbing Services",
-    },
-    {
-      name: "Electrician",
-      icon: "bi-lightning-charge-fill",
-      category: "Electrical Services",
-    },
-    {
-      name: "Carpenter",
-      icon: "bi-hammer",
-      category: "Home Services",
-    },
-    {
-      name: "Maid",
-      icon: "bi-person-workspace",
-      category: "Domestic Services",
-    },
-    {
-      name: "Babysitter",
-      icon: "bi-balloon-heart-fill",
-      category: "Child Care",
-    },
-    {
-      name: "Pet Sitter",
-      icon: "bi-heart-fill",
-      category: "Pet Care",
-    },
-    {
-      name: "Gym Trainer",
-      icon: "bi-person-fill-up",
-      category: "Fitness",
-    },
-    {
-      name: "Beautician",
-      icon: "bi-scissors",
-      category: "Beauty Services",
-    },
-    {
-      name: "Yoga Instructor",
-      icon: "bi-person-arms-up",
-      category: "Fitness & Wellness",
-    },
-    {
-      name: "Tutor",
-      icon: "bi-mortarboard-fill",
-      category: "Education",
-    },
-    {
-      name: "House Cleaning",
-      icon: "bi-house-heart-fill",
-      category: "Cleaning Services",
-    },
-    {
-      name: "Appliance Repair",
-      icon: "bi-tools",
-      category: "Repair Services",
-    },
+  const searchSuggestions = [
+    "Plumber",
+    "Electrician",
+    "Carpenter",
+    "Maid",
+    "Babysitter",
+    "Pet Sitter",
+    "Gym Trainer",
+    "Beautician",
+    "Yoga Instructor",
+    "Tutor",
+    "House Cleaning",
+    "Appliance Repair"
   ];
 
-
-  /* =========================================================
-     FILTER SEARCH SUGGESTIONS
-  ========================================================= */
-  /* =========================================================
-     FILTER SEARCH SUGGESTIONS
-  ========================================================= */
-
-  const filteredSuggestions = searchTerm.trim()
-    ? serviceSuggestions
-      .filter((service) =>
-        service.name
-          .toLowerCase()
-          .includes(searchTerm.trim().toLowerCase())
-      )
-      .slice(0, 6)
-    : [];
-  // =========================
-  // SEARCH
-  // =========================
-
-  /* =========================================================
-   SEARCH
-========================================================= */
-
-  const handleSearch = (e) => {
-    if (e.key === "Enter") {
-      if (!searchTerm.trim()) return;
-
-      navigate(
-        `/services?search=${encodeURIComponent(searchTerm.trim())}`
-      );
-
-      setSearchTerm("");
-      setShowSearchSuggestions(false);
-      setMenuOpen(false);
-    }
-  };
-
-  /* =========================================================
-     SELECT SEARCH SUGGESTION
-  ========================================================= */
-
-  const handleSuggestionClick = (serviceName) => {
-    navigate(
-      `/services?search=${encodeURIComponent(serviceName)}`
-    );
-
-    setSearchTerm("");
-    setShowSearchSuggestions(false);
-    setMenuOpen(false);
-  };
-
-  // =========================
-  // CHAT SUPPORT
-  // =========================
-
-  const openChat = () => {
-    setShowChat(true);
-    setShowProfile(false);
-    setMenuOpen(false);
-  };
-
-  const closeChat = () => {
-    if (chatLoading) return;
-    setShowChat(false);
-  };
-
-
-
-  const sendChatMessage = async (messageOverride = null) => {
-    const message = (
-      messageOverride !== null
-        ? messageOverride
-        : chatMessage
-    ).trim();
-
-    if (!message || chatLoading) return;
-
-    setChatMessages((prev) => [
-      ...prev,
-      {
-        sender: "user",
-        message,
-      },
-    ]);
-
-    setChatMessage("");
-    setChatLoading(true);
-
-    try {
-
-      console.log(
-        "Sending message to HiveCare backend:",
-        message
-      );
-
-      // =====================================================
-      // GET CURRENT USER FROM LOCAL STORAGE
-      // =====================================================
-
-      const currentUser =
-        JSON.parse(
-          localStorage.getItem("user")
-        ) || {};
-
-      // Your login response may store the ID as either
-      // id or userId, so support both.
-      const currentUserId =
-        currentUser?.id ??
-        currentUser?.userId ??
-        null;
-
-      const currentUserRole =
-        currentUser?.role
-          ? String(currentUser.role).toUpperCase()
-          : "USER";
-
-      // =====================================================
-      // SEND CHAT MESSAGE + USER ID
-      // =====================================================
-
-      const result =
-        await sendChatMessageAPI({
-
-          message: message,
-
-          userId: currentUserId,
-
-          userName:
-            currentUser?.name ||
-            user?.name ||
-            "Guest",
-
-          userEmail:
-            currentUser?.email ||
-            user?.email ||
-            "",
-
-          userRole:
-            currentUserRole,
-
-          workerService:
-            currentUser?.workerService ||
-            user?.workerService ||
-            "",
-        });
-
-      console.log(
-        "HiveCare chatbot response:",
-        result.data
-      );
-
-      const data =
-        result.data;
-
-      setChatMessages((prev) => [
-        ...prev,
-        {
-          sender: "bot",
-          message:
-            data?.reply ||
-            "Sorry, I couldn't process your request right now.",
-        },
-      ]);
-
-    } catch (error) {
-
-      console.error(
-        "================================"
-      );
-
-      console.error(
-        "HIVECARE CHAT ERROR"
-      );
-
-      console.error(
-        "================================"
-      );
-
-      console.error(
-        "Error:",
-        error
-      );
-
-      console.error(
-        "Status:",
-        error.response?.status
-      );
-
-      console.error(
-        "Server response:",
-        error.response?.data
-      );
-
-      console.error(
-        "================================"
-      );
-
-      setChatMessages((prev) => [
-        ...prev,
-        {
-          sender: "bot",
-          message:
-            error.response?.data?.reply ||
-            "Sorry 😔 I'm having trouble connecting to HiveCare Support right now. Please try again in a moment.",
-        },
-      ]);
-
-    } finally {
-
-      setChatLoading(false);
-    }
-  };
-
-
-
-
-
-  const handleChatSubmit = (e) => {
-    e.preventDefault();
-    sendChatMessage();
-  };
-
-  const handleQuickQuestion = (question) => {
-    sendChatMessage(question);
-  };
-
-  // Auto scroll chat
-  useEffect(() => {
-    if (chatBodyRef.current) {
-      chatBodyRef.current.scrollTop =
-        chatBodyRef.current.scrollHeight;
-    }
-  }, [chatMessages, chatLoading]);
-
-  // =========================
-  // SCROLL EFFECT
-  // =========================
+  // =========================================================
+  // SCROLL
+  // =========================================================
 
   useEffect(() => {
     const handleScroll = () => {
@@ -585,133 +109,900 @@ const handleProfileImageUpload = (e) => {
 
     window.addEventListener("scroll", handleScroll);
 
+    handleScroll();
+
     return () => {
       window.removeEventListener("scroll", handleScroll);
     };
   }, []);
 
-  // =========================
+  // =========================================================
+  // LOAD PROFILE IMAGE
+  // =========================================================
+
+  useEffect(() => {
+    let mounted = true;
+
+    const loadProfileImage = async () => {
+      if (!user?.id) {
+        if (mounted) {
+          setProfileImage("");
+        }
+
+        return;
+      }
+
+      const imageCacheKey =
+        `hivecare_profile_image_${String(user.id)}`;
+
+      // -------------------------------------------------------
+      // LOAD CACHED IMAGE FIRST
+      // -------------------------------------------------------
+
+      try {
+        const cachedImage =
+          localStorage.getItem(imageCacheKey);
+
+        if (mounted && cachedImage) {
+          setProfileImage(cachedImage);
+        }
+      } catch {
+        // Ignore localStorage errors.
+      }
+
+      // -------------------------------------------------------
+      // LOAD IMAGE FROM BACKEND
+      // -------------------------------------------------------
+
+      try {
+        const response = await getUserById(user.id);
+
+        if (!mounted) {
+          return;
+        }
+
+        const image =
+          response?.profileImage ||
+          response?.profile_image ||
+          response?.data?.profileImage ||
+          response?.data?.profile_image ||
+          "";
+
+        if (image) {
+          setProfileImage(image);
+
+          try {
+            localStorage.setItem(
+              imageCacheKey,
+              image
+            );
+          } catch {
+            // Ignore cache errors.
+          }
+        }
+      } catch {
+        // Keep cached image if backend request fails.
+      }
+    };
+
+    loadProfileImage();
+
+    return () => {
+      mounted = false;
+    };
+  }, [user?.id]);
+
+  // =========================================================
+  // CLOSE DESKTOP PROFILE ON OUTSIDE CLICK
+  // =========================================================
+
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (!showProfile) {
+        return;
+      }
+
+      const profileWrapper =
+        profileWrapperRef.current;
+
+      const profileDropdown =
+        profileDropdownRef.current;
+
+      const clickedInsideWrapper =
+        profileWrapper &&
+        profileWrapper.contains(event.target);
+
+      const clickedInsideDropdown =
+        profileDropdown &&
+        profileDropdown.contains(event.target);
+
+      if (
+        !clickedInsideWrapper &&
+        !clickedInsideDropdown
+      ) {
+        setShowProfile(false);
+      }
+    };
+
+    document.addEventListener(
+      "pointerdown",
+      handleOutsideClick
+    );
+
+    return () => {
+      document.removeEventListener(
+        "pointerdown",
+        handleOutsideClick
+      );
+    };
+  }, [showProfile]);
+
+  // =========================================================
+  // USER CHANGE CLEANUP
+  // =========================================================
+
+  useEffect(() => {
+    if (!user) {
+      setShowProfile(false);
+      setMobileProfileOpen(false);
+      setShowChat(false);
+      setMenuOpen(false);
+      setShowProfileImagePreview(false);
+      setProfileImage("");
+      setChatMessage("");
+      setChatMessages([]);
+      setSearchTerm("");
+      setShowSearchSuggestions(false);
+    }
+  }, [user]);
+
+  // =========================================================
+  // CLEANUP TIMERS
+  // =========================================================
+
+  useEffect(() => {
+    return () => {
+      if (notificationTimerRef.current) {
+        clearTimeout(notificationTimerRef.current);
+      }
+
+      if (logoutTimerRef.current) {
+        clearTimeout(logoutTimerRef.current);
+      }
+    };
+  }, []);
+
+  // =========================================================
+  // CHAT AUTO SCROLL
+  // =========================================================
+
+  useEffect(() => {
+    if (chatBodyRef.current) {
+      chatBodyRef.current.scrollTo({
+        top: chatBodyRef.current.scrollHeight,
+        behavior: "smooth"
+      });
+    }
+  }, [chatMessages, chatLoading]);
+
+  // =========================================================
+  // NOTIFICATION
+  // =========================================================
+
+  const showNotification = (
+    type,
+    message,
+    duration = 1800
+  ) => {
+    if (notificationTimerRef.current) {
+      clearTimeout(notificationTimerRef.current);
+    }
+
+    setNotification({
+      show: true,
+      type,
+      message
+    });
+
+    notificationTimerRef.current = setTimeout(() => {
+      setNotification({
+        show: false,
+        type: "",
+        message: ""
+      });
+
+      notificationTimerRef.current = null;
+    }, duration);
+  };
+
+  // =========================================================
+  // DESKTOP PROFILE TOGGLE
+  // =========================================================
+
+  const toggleProfile = (event) => {
+    event?.preventDefault();
+    event?.stopPropagation();
+
+    if (!user || loggingOut) {
+      return;
+    }
+
+    setShowChat(false);
+    setShowSearchSuggestions(false);
+
+    setShowProfile((previous) => !previous);
+  };
+
+  // =========================================================
   // CLOSE MENU
-  // =========================
+  // =========================================================
 
   const closeMenu = () => {
     setMenuOpen(false);
     setShowProfile(false);
+    setMobileProfileOpen(false);
+    setShowSearchSuggestions(false);
   };
 
-  return (
-    <>
-      {/* =========================
-          LOGOUT NOTIFICATION
-      ========================== */}
+  // =========================================================
+  // SEARCH
+  // =========================================================
 
-      {notification.show && (
-        <div
-          className={`hc-notification hc-notification-${notification.type}`}
-        >
-          <div className="hc-notification-icon">
-            {notification.type === "success" ? "✓" : "⚠"}
+  const handleSearch = (event) => {
+    event.preventDefault();
+
+    const value = searchTerm.trim();
+
+    if (!value) {
+      return;
+    }
+
+    navigate(
+      `/services?search=${encodeURIComponent(value)}`
+    );
+
+    setSearchTerm("");
+    setShowSearchSuggestions(false);
+    setMenuOpen(false);
+    setMobileProfileOpen(false);
+  };
+
+  const handleSuggestionClick = (suggestion) => {
+    navigate(
+      `/services?search=${encodeURIComponent(suggestion)}`
+    );
+
+    setSearchTerm("");
+    setShowSearchSuggestions(false);
+    setMenuOpen(false);
+    setMobileProfileOpen(false);
+  };
+
+  const filteredSuggestions =
+    searchSuggestions.filter((item) =>
+      item
+        .toLowerCase()
+        .includes(searchTerm.toLowerCase())
+    );
+
+  // =========================================================
+  // CHAT OPEN
+  // =========================================================
+
+  const openChat = () => {
+    if (!user) {
+      navigate("/login");
+      return;
+    }
+
+    setShowChat(true);
+    setShowProfile(false);
+    setMenuOpen(false);
+    setMobileProfileOpen(false);
+    setShowSearchSuggestions(false);
+
+    if (chatMessages.length === 0) {
+      setChatMessages([
+        {
+          sender: "bot",
+          message:
+            "Welcome to HiveCare Support! 👋 I'm your AI support assistant. How can I help you today?"
+        }
+      ]);
+    }
+  };
+
+  // =========================================================
+  // CHAT CLOSE
+  // =========================================================
+
+  const closeChat = () => {
+    if (chatLoading) {
+      return;
+    }
+
+    setShowChat(false);
+  };
+
+  // =========================================================
+  // CHAT SEND
+  // =========================================================
+
+  const handleSendChatMessage = async (event) => {
+    event.preventDefault();
+
+    const message = chatMessage.trim();
+
+    if (!message || chatLoading || !user) {
+      return;
+    }
+
+    const currentUser = user;
+
+    setChatMessages((previous) => [
+      ...previous,
+      {
+        sender: "user",
+        message
+      }
+    ]);
+
+    setChatMessage("");
+    setChatLoading(true);
+
+    try {
+      const payload = {
+        message: message,
+
+        userId: currentUser?.id || null,
+        currentUserId: currentUser?.id || null,
+
+        userName: currentUser?.name || "",
+        email: currentUser?.email || "",
+
+        role: currentUser?.role || "USER",
+
+        workerService:
+          currentUser?.workerService || ""
+      };
+
+      const response =
+        await sendChatMessageAPI(payload);
+
+      let reply = "";
+
+      if (typeof response === "string") {
+        reply = response;
+      } else {
+        reply =
+          response?.reply ||
+          response?.message ||
+          response?.response ||
+          response?.data?.reply ||
+          response?.data?.message ||
+          response?.data?.response ||
+          "";
+      }
+
+      if (!reply || !String(reply).trim()) {
+        reply =
+          "I received your message, but I couldn't generate a response right now. Please try again.";
+      }
+
+      setChatMessages((previous) => [
+        ...previous,
+        {
+          sender: "bot",
+          message: String(reply)
+        }
+      ]);
+    } catch {
+      setChatMessages((previous) => [
+        ...previous,
+        {
+          sender: "bot",
+          message:
+            "I'm having trouble connecting to HiveCare AI right now. Please check that the HiveCare backend is running and try again."
+        }
+      ]);
+    } finally {
+      setChatLoading(false);
+    }
+  };
+
+  // =========================================================
+  // QUICK QUESTION
+  // =========================================================
+
+  const sendQuickQuestion = (question) => {
+    if (chatLoading) {
+      return;
+    }
+
+    setChatMessage(question);
+  };
+
+  // =========================================================
+  // PROFILE IMAGE
+  // =========================================================
+
+  const handleProfileImageChange = async (event) => {
+    const file = event.target.files?.[0];
+
+    if (!file || !user?.id) {
+      return;
+    }
+
+    if (!file.type.startsWith("image/")) {
+      showNotification(
+        "error",
+        "Please select a valid image."
+      );
+
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size > 5 * 1024 * 1024) {
+      showNotification(
+        "error",
+        "Image size must be less than 5 MB."
+      );
+
+      event.target.value = "";
+      return;
+    }
+
+    const reader = new FileReader();
+
+    reader.onload = async () => {
+      try {
+        const imageData = reader.result;
+
+        await updateProfileImage(
+          user.id,
+          imageData
+        );
+
+        try {
+          localStorage.setItem(
+            `hivecare_profile_image_${String(user.id)}`,
+            imageData
+          );
+        } catch {
+          // Ignore cache failure.
+        }
+
+        setProfileImage(imageData);
+
+        showNotification(
+          "success",
+          "Profile image updated successfully!"
+        );
+      } catch {
+        showNotification(
+          "error",
+          "Unable to update profile image."
+        );
+      }
+    };
+
+    reader.onerror = () => {
+      showNotification(
+        "error",
+        "Unable to read the selected image."
+      );
+    };
+
+    reader.readAsDataURL(file);
+
+    event.target.value = "";
+  };
+
+  // =========================================================
+  // LOGOUT
+  // =========================================================
+
+  const handleLogout = (event) => {
+    event?.preventDefault();
+    event?.stopPropagation();
+
+    if (loggingOut) {
+      return;
+    }
+
+    setLoggingOut(true);
+
+    setShowProfile(false);
+    setMobileProfileOpen(false);
+    setMenuOpen(false);
+    setShowChat(false);
+    setShowSearchSuggestions(false);
+    setShowProfileImagePreview(false);
+
+    if (notificationTimerRef.current) {
+      clearTimeout(notificationTimerRef.current);
+      notificationTimerRef.current = null;
+    }
+
+    if (logoutTimerRef.current) {
+      clearTimeout(logoutTimerRef.current);
+      logoutTimerRef.current = null;
+    }
+
+    logout();
+
+    setNotification({
+      show: true,
+      type: "success",
+      message: "Logged out successfully!"
+    });
+
+    logoutTimerRef.current = setTimeout(() => {
+      setNotification({
+        show: false,
+        type: "",
+        message: ""
+      });
+
+      logoutTimerRef.current = null;
+
+      navigate("/login", {
+        replace: true,
+        state: null
+      });
+    }, 1800);
+  };
+
+  // =========================================================
+  // AVATAR CLICK
+  // =========================================================
+
+  const handleAvatarClick = (event) => {
+    if (!profileImage || loggingOut) {
+      return;
+    }
+
+    event.preventDefault();
+    event.stopPropagation();
+
+    setShowProfileImagePreview(true);
+  };
+
+  const closeProfileImagePreview = () => {
+    setShowProfileImagePreview(false);
+  };
+
+  // =========================================================
+  // MOBILE MENU
+  // =========================================================
+
+  const toggleMobileMenu = (event) => {
+    event?.preventDefault();
+    event?.stopPropagation();
+
+    if (loggingOut) {
+      return;
+    }
+
+    setMenuOpen((previous) => {
+      const nextState = !previous;
+
+      if (nextState) {
+        setShowProfile(false);
+        setMobileProfileOpen(false);
+        setShowSearchSuggestions(false);
+      } else {
+        setShowProfile(false);
+        setMobileProfileOpen(false);
+        setShowSearchSuggestions(false);
+      }
+
+      return nextState;
+    });
+  };
+
+  // =========================================================
+  // MOBILE PROFILE TOGGLE
+  // =========================================================
+
+  const toggleMobileProfile = (event) => {
+    event?.preventDefault();
+    event?.stopPropagation();
+
+    if (!user || loggingOut) {
+      return;
+    }
+
+    setShowProfile(false);
+    setShowSearchSuggestions(false);
+
+    setMobileProfileOpen((previous) => !previous);
+  };
+
+  // =========================================================
+  // CLOSE MOBILE PROFILE
+  // =========================================================
+
+  const closeMobileProfile = (event) => {
+    event?.preventDefault();
+    event?.stopPropagation();
+
+    setMobileProfileOpen(false);
+  };
+
+  // =========================================================
+  // RENDER PROFILE CONTENT
+  // =========================================================
+
+  const renderProfileContent = () => {
+    return (
+      <>
+        <div className="hc-profile-top">
+
+          <div className="hc-profile-avatar-container">
+
+            <div className="hc-profile-avatar-large">
+
+              {profileImage ? (
+                <img
+                  src={profileImage}
+                  alt={userName}
+                  onClick={(event) => {
+                    event.stopPropagation();
+                    setShowProfileImagePreview(true);
+                  }}
+                />
+              ) : (
+                <span
+                  className="hc-profile-initial"
+                  aria-label={`${userName} profile`}
+                >
+                  {userInitial}
+                </span>
+              )}
+
+            </div>
+
+            <label className="hc-profile-image-upload">
+
+              <i className="bi bi-camera-fill"></i>
+
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleProfileImageChange}
+                hidden
+              />
+
+            </label>
+
           </div>
 
-          <div className="hc-notification-content">
-            <strong>
-              {notification.type === "success"
-                ? "Success"
-                : "Error"}
-            </strong>
+          <div className="hc-profile-name-section">
 
-            <span>{notification.message}</span>
+            <h4>
+              {userName}
+            </h4>
+
+            <span className="hc-role-badge">
+              <i className="bi bi-shield-check"></i>
+              {role}
+            </span>
+
           </div>
+
+        </div>
+
+        <div className="hc-profile-divider"></div>
+
+        <div className="hc-profile-details">
+
+          {user?.email && (
+            <div className="hc-profile-detail">
+
+              <i className="bi bi-envelope hc-detail-icon email"></i>
+
+              <div>
+                <small>Email</small>
+                <p>{user.email}</p>
+              </div>
+
+            </div>
+          )}
+
+          {user?.phone && (
+            <div className="hc-profile-detail">
+
+              <i className="bi bi-telephone hc-detail-icon phone"></i>
+
+              <div>
+                <small>Phone</small>
+                <p>{user.phone}</p>
+              </div>
+
+            </div>
+          )}
+
+          {user?.address && (
+            <div className="hc-profile-detail">
+
+              <i className="bi bi-geo-alt hc-detail-icon address"></i>
+
+              <div>
+                <small>Address</small>
+                <p>{user.address}</p>
+              </div>
+
+            </div>
+          )}
+
+          {role === "WORKER" &&
+            user?.workerService && (
+              <div className="hc-profile-detail">
+
+                <i className="bi bi-tools hc-detail-icon service"></i>
+
+                <div>
+                  <small>Service</small>
+                  <p>
+                    {user.workerService}
+                  </p>
+                </div>
+
+              </div>
+            )}
+
+        </div>
+
+        <div className="hc-profile-divider"></div>
+
+        <div className="hc-profile-actions">
+
+          <Link
+            to="/profile"
+            className="hc-profile-action"
+            onClick={(event) => {
+              event.stopPropagation();
+
+              setShowProfile(false);
+              setMobileProfileOpen(false);
+              setMenuOpen(false);
+            }}
+          >
+
+            <div className="hc-action-icon">
+              <i className="bi bi-pencil-square"></i>
+            </div>
+
+            <span>Edit Profile</span>
+
+            <i className="bi bi-chevron-right"></i>
+
+          </Link>
 
           <button
             type="button"
-            className="hc-notification-close"
-            onClick={() =>
-              setNotification({
-                show: false,
-                type: "",
-                message: "",
-              })
-            }
+            className="hc-profile-logout"
+            onClick={handleLogout}
+            disabled={loggingOut}
           >
-            ×
-          </button>
-        </div>
-      )}
 
-      {/* =========================
+            <div className="hc-action-icon">
+              <i className="bi bi-box-arrow-right"></i>
+            </div>
+
+            <span>
+              {loggingOut
+                ? "Logging out..."
+                : "Logout"}
+            </span>
+
+          </button>
+
+        </div>
+      </>
+    );
+  };
+
+  // =========================================================
+  // RENDER
+  // =========================================================
+
+  return (
+    <>
+      {/* =====================================================
           NAVBAR
-      ========================== */}
+      ====================================================== */}
 
       <nav
-        className={`hc-navbar ${scrolled ? "hc-navbar-scrolled" : ""
-          }`}
+        className={`hc-navbar ${
+          scrolled ? "hc-navbar-scrolled" : ""
+        }`}
       >
         <div className="hc-navbar-container">
 
-          {/* LOGO */}
+          {/* =================================================
+              LOGO
+          ================================================== */}
 
           <div className="hc-brand">
+
             <Link
               to="/"
               className="hc-brand-link"
               onClick={closeMenu}
             >
+
               <div className="hc-logo-wrapper">
+
                 <img
                   src={logo}
-                  alt="HiveCare Logo"
+                  alt="HiveCare"
                   className="hc-logo"
                 />
+
               </div>
 
               <div className="hc-brand-name">
-                <span className="hc-hive">Hive</span>
-                <span className="hc-care">Care</span>
+
+                <span className="hc-hive">
+                  Hive
+                </span>
+
+                <span className="hc-care">
+                  Care
+                </span>
+
               </div>
+
             </Link>
+
           </div>
 
-          {/* SEARCH */}
-
-
-          {/* =========================================================
-    SEARCH
-========================================================= */}
+          {/* =================================================
+              DESKTOP SEARCH
+          ================================================== */}
 
           {role !== "ADMIN" &&
             role !== "WORKER" && (
 
-              <div
-                className="hc-search-container"
-                onBlur={(e) => {
-                  if (!e.currentTarget.contains(e.relatedTarget)) {
-                    setShowSearchSuggestions(false);
-                  }
-                }}
-              >
+              <div className="hc-search-container hc-desktop-search">
 
-                <div className="hc-search">
+                <form
+                  className="hc-search"
+                  onSubmit={handleSearch}
+                >
 
                   <i className="bi bi-search"></i>
 
                   <input
                     type="text"
-                    placeholder="Search services..."
                     value={searchTerm}
-                    onChange={(e) => {
-                      setSearchTerm(e.target.value);
-                      setShowSearchSuggestions(true);
+                    placeholder="Search services..."
+                    onChange={(event) => {
+
+                      const value =
+                        event.target.value;
+
+                      setSearchTerm(value);
+
+                      setShowSearchSuggestions(
+                        value.trim().length > 0
+                      );
+
                     }}
                     onFocus={() => {
+
                       if (searchTerm.trim()) {
                         setShowSearchSuggestions(true);
                       }
+
                     }}
-                    onKeyDown={handleSearch}
                   />
 
                   {searchTerm && (
+
                     <button
                       type="button"
                       className="hc-search-clear"
@@ -719,17 +1010,16 @@ const handleProfileImageUpload = (e) => {
                         setSearchTerm("");
                         setShowSearchSuggestions(false);
                       }}
+                      aria-label="Clear search"
                     >
+
                       <i className="bi bi-x"></i>
+
                     </button>
+
                   )}
 
-                </div>
-
-
-                {/* =====================================================
-          SERVICE SUGGESTIONS
-      ===================================================== */}
+                </form>
 
                 {showSearchSuggestions &&
                   searchTerm.trim() &&
@@ -737,53 +1027,40 @@ const handleProfileImageUpload = (e) => {
 
                     <div className="hc-search-suggestions">
 
-                      {filteredSuggestions.map((service) => (
+                      {filteredSuggestions.map(
+                        (suggestion) => (
 
-                        <button
-                          type="button"
-                          key={service.name}
-                          className="hc-search-suggestion"
-                          onMouseDown={(e) => {
-                            e.preventDefault();
+                          <button
+                            type="button"
+                            className="hc-search-suggestion"
+                            key={suggestion}
+                            onClick={() =>
+                              handleSuggestionClick(
+                                suggestion
+                              )
+                            }
+                          >
 
-                            handleSuggestionClick(
-                              service.name
-                            );
-                          }}
-                        >
+                            <div className="hc-suggestion-icon">
 
-                          <div className="hc-suggestion-icon">
-                            <i
-                              className={`bi ${service.icon}`}
-                            ></i>
-                          </div>
+                              <i className="bi bi-search"></i>
 
-                          <div className="hc-suggestion-content">
-
-                            <strong>
-                              {service.name}
-                            </strong>
+                            </div>
 
                             <span>
-                              {service.category}
+                              {suggestion}
                             </span>
 
-                          </div>
+                            <i className="bi bi-arrow-up-right"></i>
 
-                          <i className="bi bi-arrow-up-right"></i>
+                          </button>
 
-                        </button>
-
-                      ))}
+                        )
+                      )}
 
                     </div>
 
                   )}
-
-
-                {/* =====================================================
-          NO RESULT
-      ===================================================== */}
 
                 {showSearchSuggestions &&
                   searchTerm.trim() &&
@@ -793,17 +1070,9 @@ const handleProfileImageUpload = (e) => {
 
                       <i className="bi bi-search"></i>
 
-                      <div>
-
-                        <strong>
-                          No service found
-                        </strong>
-
-                        <span>
-                          Press Enter to search for "{searchTerm}"
-                        </span>
-
-                      </div>
+                      <span>
+                        No services found
+                      </span>
 
                     </div>
 
@@ -813,417 +1082,608 @@ const handleProfileImageUpload = (e) => {
 
             )}
 
-
-
-          {/* MOBILE TOGGLE */}
-
-          <button
-            type="button"
-            className={`hc-menu-toggle ${menuOpen ? "open" : ""
-              }`}
-            onClick={() => setMenuOpen(!menuOpen)}
-            disabled={loggingOut}
-          >
-            <span></span>
-            <span></span>
-            <span></span>
-          </button>
-
-          {/* NAVIGATION */}
+          {/* =================================================
+              MAIN NAVIGATION
+          ================================================== */}
 
           <div
-            className={`hc-nav-links ${menuOpen ? "hc-nav-active" : ""
-              }`}
+            className={`hc-nav-links ${
+              menuOpen
+                ? "hc-nav-active"
+                : ""
+            } ${
+              mobileProfileOpen
+                ? "hc-mobile-profile-mode"
+                : ""
+            }`}
           >
 
-            {/* ADMIN */}
+            {/* =================================================
+                MOBILE SEARCH
+            ================================================== */}
 
-            {role === "ADMIN" && (
-              <Link
-                to="/admin"
-                className="hc-nav-link hc-special-link"
-                onClick={closeMenu}
-              >
-                <i className="bi bi-speedometer2"></i>
-                <span>Admin Dashboard</span>
-              </Link>
-            )}
+            {!mobileProfileOpen &&
+              role !== "ADMIN" &&
+              role !== "WORKER" && (
 
-            {/* WORKER */}
+                <div className="hc-mobile-search">
 
-            {role === "WORKER" && (
-              <Link
-                to="/worker"
-                className="hc-nav-link hc-special-link"
-                onClick={closeMenu}
-              >
-                <i className="bi bi-person-workspace"></i>
-                <span>Worker Dashboard</span>
-              </Link>
-            )}
-
-            {/* NORMAL USER */}
-
-            {(!role ||
-              (role !== "ADMIN" &&
-                role !== "WORKER")) && (
-                <>
-                  <Link
-                    to="/"
-                    className="hc-nav-link"
-                    onClick={closeMenu}
+                  <form
+                    className="hc-search"
+                    onSubmit={handleSearch}
                   >
-                    <i className="bi bi-house-door"></i>
-                    <span>Home</span>
+
+                    <i className="bi bi-search"></i>
+
+                    <input
+                      type="text"
+                      value={searchTerm}
+                      placeholder="Search services..."
+                      onChange={(event) => {
+
+                        const value =
+                          event.target.value;
+
+                        setSearchTerm(value);
+
+                        setShowSearchSuggestions(
+                          value.trim().length > 0
+                        );
+
+                      }}
+                      onFocus={() => {
+
+                        if (searchTerm.trim()) {
+                          setShowSearchSuggestions(true);
+                        }
+
+                      }}
+                    />
+
+                    {searchTerm && (
+
+                      <button
+                        type="button"
+                        className="hc-search-clear"
+                        onClick={() => {
+                          setSearchTerm("");
+                          setShowSearchSuggestions(false);
+                        }}
+                        aria-label="Clear search"
+                      >
+
+                        <i className="bi bi-x"></i>
+
+                      </button>
+
+                    )}
+
+                  </form>
+
+                  {showSearchSuggestions &&
+                    searchTerm.trim() &&
+                    filteredSuggestions.length > 0 && (
+
+                      <div className="hc-search-suggestions">
+
+                        {filteredSuggestions.map(
+                          (suggestion) => (
+
+                            <button
+                              type="button"
+                              className="hc-search-suggestion"
+                              key={suggestion}
+                              onClick={() =>
+                                handleSuggestionClick(
+                                  suggestion
+                                )
+                              }
+                            >
+
+                              <div className="hc-suggestion-icon">
+
+                                <i className="bi bi-search"></i>
+
+                              </div>
+
+                              <span>
+                                {suggestion}
+                              </span>
+
+                              <i className="bi bi-arrow-up-right"></i>
+
+                            </button>
+
+                          )
+                        )}
+
+                      </div>
+
+                    )}
+
+                  {showSearchSuggestions &&
+                    searchTerm.trim() &&
+                    filteredSuggestions.length === 0 && (
+
+                      <div className="hc-search-no-result">
+
+                        <i className="bi bi-search"></i>
+
+                        <span>
+                          No services found
+                        </span>
+
+                      </div>
+
+                    )}
+
+                </div>
+
+              )}
+
+            {/* =================================================
+                NORMAL NAVIGATION
+            ================================================== */}
+
+            {!mobileProfileOpen && (
+              <>
+                {user && role === "ADMIN" ? (
+
+                  <Link
+                    to="/admin"
+                    onClick={closeMenu}
+                    className="hc-nav-link hc-special-link"
+                  >
+
+                    <i className="bi bi-speedometer2"></i>
+
+                    <span>
+                      Admin Dashboard
+                    </span>
+
                   </Link>
 
+                ) : user && role === "WORKER" ? (
+
                   <Link
-                    to="/services"
-                    className="hc-nav-link"
+                    to="/worker"
                     onClick={closeMenu}
+                    className="hc-nav-link hc-special-link"
                   >
-                    <i className="bi bi-grid"></i>
-                    <span>Services</span>
+
+                    <i className="bi bi-person-workspace"></i>
+
+                    <span>
+                      Worker Dashboard
+                    </span>
+
                   </Link>
 
-                  {user && (
+                ) : (
+
+                  <>
                     <Link
-                      to="/history"
-                      className="hc-nav-link"
+                      to="/"
                       onClick={closeMenu}
+                      className="hc-nav-link"
                     >
-                      <i className="bi bi-calendar-check"></i>
-                      <span>My Bookings</span>
+
+                      <i className="bi bi-house-door-fill"></i>
+
+                      <span>
+                        Home
+                      </span>
+
                     </Link>
+
+                    <Link
+                      to="/services"
+                      onClick={closeMenu}
+                      className="hc-nav-link"
+                    >
+
+                      <i className="bi bi-grid-fill"></i>
+
+                      <span>
+                        Services
+                      </span>
+
+                    </Link>
+
+                    {user && (
+
+                      <Link
+                        to="/history"
+                        onClick={closeMenu}
+                        className="hc-nav-link"
+                      >
+
+                        <i className="bi bi-clock-history"></i>
+
+                        <span>
+                          Bookings
+                        </span>
+
+                      </Link>
+
+                    )}
+
+                    {user && (
+
+                      <button
+                        type="button"
+                        className="hc-nav-link hc-support-nav-btn"
+                        onClick={openChat}
+                      >
+
+                        <i className="bi bi-headset"></i>
+
+                        <span>
+                          Support
+                        </span>
+
+                      </button>
+
+                    )}
+
+                  </>
+
+                )}
+              </>
+            )}
+
+            {/* =================================================
+                MOBILE ACCOUNT AREA
+            ================================================== */}
+
+            <div className="hc-mobile-account">
+
+              {user ? (
+
+                <>
+                  {!mobileProfileOpen ? (
+
+                    /* =========================================
+                       MOBILE PROFILE HEADER
+                    ========================================== */
+
+                    <button
+                      type="button"
+                      className="hc-mobile-profile-trigger"
+                      onClick={toggleMobileProfile}
+                      disabled={loggingOut}
+                      aria-expanded={false}
+                    >
+
+                      <div className="hc-mobile-profile-avatar">
+
+                        {profileImage ? (
+
+                          <img
+                            src={profileImage}
+                            alt={userName}
+                          />
+
+                        ) : (
+
+                          <span>
+                            {userInitial}
+                          </span>
+
+                        )}
+
+                      </div>
+
+                      <div className="hc-mobile-profile-info">
+
+                        <strong>
+                          {userName}
+                        </strong>
+
+                        <span>
+                          {role}
+                        </span>
+
+                      </div>
+
+                      <i className="bi bi-chevron-right"></i>
+
+                    </button>
+
+                  ) : (
+
+                    /* =========================================
+                       MOBILE PROFILE PANEL
+                    ========================================== */
+
+                    <div
+                      className="hc-mobile-profile-panel"
+                      ref={profileDropdownRef}
+                    >
+
+                      {/* BACK BUTTON */}
+
+                      <button
+                        type="button"
+                        className="hc-mobile-profile-back"
+                        onClick={closeMobileProfile}
+                      >
+
+                        <i className="bi bi-arrow-left"></i>
+
+                        <span>
+                          Back to Menu
+                        </span>
+
+                      </button>
+
+                      {/* PROFILE CONTENT */}
+
+                      {renderProfileContent()}
+
+                    </div>
+
                   )}
 
-                  {/* HIVECARE SUPPORT */}
+                </>
+
+              ) : (
+
+                <div className="hc-mobile-auth">
+
+                  <Link
+                    to="/login"
+                    className="hc-mobile-auth-btn hc-mobile-login"
+                    onClick={closeMenu}
+                  >
+
+                    <i className="bi bi-box-arrow-in-right"></i>
+
+                    <span>
+                      Login
+                    </span>
+
+                  </Link>
+
+                  <Link
+                    to="/register"
+                    className="hc-mobile-auth-btn hc-mobile-register"
+                    onClick={closeMenu}
+                  >
+
+                    <i className="bi bi-person-plus-fill"></i>
+
+                    <span>
+                      Register
+                    </span>
+
+                  </Link>
+
+                </div>
+
+              )}
+
+            </div>
+
+          </div>
+
+          {/* =================================================
+              DESKTOP RIGHT SIDE
+          ================================================== */}
+
+          <div className="hc-navbar-right">
+
+            {/* DESKTOP ACCOUNT */}
+
+            <div className="hc-desktop-account">
+
+              {user ? (
+
+                <div
+                  className="hc-profile-wrapper"
+                  ref={profileWrapperRef}
+                >
 
                   <button
                     type="button"
-                    className={`hc-nav-link hc-support-nav-btn ${showChat ? "hc-support-active" : ""
-                      }`}
-                    onClick={openChat}
+                    className={`hc-profile-btn ${
+                      showProfile
+                        ? "hc-profile-active"
+                        : ""
+                    }`}
+                    onClick={toggleProfile}
+                    disabled={loggingOut}
+                    aria-expanded={showProfile}
+                    aria-haspopup="true"
                   >
-                    <i className="bi bi-chat-dots-fill"></i>
-                    <span>Support</span>
+
+                    <div
+                      className={`hc-user-avatar ${
+                        profileImage
+                          ? "hc-clickable-avatar"
+                          : ""
+                      }`}
+                      onClick={handleAvatarClick}
+                    >
+
+                      {profileImage ? (
+
+                        <img
+                          src={profileImage}
+                          alt={userName}
+                        />
+
+                      ) : (
+
+                        <span
+                          className="hc-user-initial"
+                          aria-label={`${userName} profile`}
+                        >
+                          {userInitial}
+                        </span>
+
+                      )}
+
+                    </div>
+
+                    <div className="hc-user-name">
+
+                      <span>
+                        {userName}
+                      </span>
+
+                    </div>
+
+                    <i
+                      className={`bi ${
+                        showProfile
+                          ? "bi-chevron-up"
+                          : "bi-chevron-down"
+                      }`}
+                    ></i>
+
                   </button>
-                </>
+
+                </div>
+
+              ) : (
+
+                <div className="hc-auth-buttons">
+
+                  <Link
+                    to="/login"
+                    className="hc-login-btn"
+                    onClick={closeMenu}
+                  >
+
+                    <i className="bi bi-box-arrow-in-right"></i>
+
+                    <span>
+                      Login
+                    </span>
+
+                  </Link>
+
+                  <Link
+                    to="/register"
+                    className="hc-register-btn"
+                    onClick={closeMenu}
+                  >
+
+                    <i className="bi bi-person-plus-fill"></i>
+
+                    <span>
+                      Register
+                    </span>
+
+                  </Link>
+
+                </div>
+
               )}
 
-            {/* PROFILE */}
+            </div>
 
-            {user ? (
-              <div className="hc-profile-wrapper">
+            {/* =================================================
+                MOBILE HAMBURGER
+            ================================================== */}
 
-                <button
-                  type="button"
-                  className={`hc-profile-btn ${showProfile
-                    ? "hc-profile-active"
-                    : ""
-                    }`}
-                  onClick={() => {
-                    if (loggingOut) return;
+            <button
+              type="button"
+              className={`hc-menu-toggle ${
+                menuOpen
+                  ? "open"
+                  : ""
+              }`}
+              onClick={toggleMobileMenu}
+              aria-label={
+                menuOpen
+                  ? "Close navigation menu"
+                  : "Open navigation menu"
+              }
+              aria-expanded={menuOpen}
+            >
 
-                    setShowProfile(!showProfile);
-                    setMenuOpen(false);
-                    setShowChat(false);
-                  }}
-                >
-                  <div
-                    className={`hc-user-avatar ${profileImage ? "hc-clickable-avatar" : ""
-                      }`}
-                    onClick={(e) => {
-                      if (profileImage) {
-                        e.stopPropagation();
-                        setShowProfileImagePreview(true);
-                      }
-                    }}
-                    title={profileImage ? "View profile picture" : ""}
-                  >
-                    {profileImage ? (
-                      <img
-                        src={profileImage}
-                        alt="Profile"
-                      />
-                    ) : (
-                      user.name
-                        ? user.name.charAt(0).toUpperCase()
-                        : "U"
-                    )}
-                  </div>
+              <i
+                className={`bi ${
+                  menuOpen
+                    ? "bi-x-lg"
+                    : "bi-list"
+                }`}
+              ></i>
 
-                  <span className="hc-user-name">
-                    {user.name}
-                  </span>
-
-                  <i
-                    className={`bi ${showProfile
-                      ? "bi-chevron-up"
-                      : "bi-chevron-down"
-                      }`}
-                  ></i>
-                </button>
-
-              </div>
-            ) : (
-              <div className="hc-auth-buttons">
-
-                <Link
-                  to="/login"
-                  className="hc-login-btn"
-                  onClick={closeMenu}
-                >
-                  <i className="bi bi-box-arrow-in-right"></i>
-                  Login
-                </Link>
-
-                <Link
-                  to="/register"
-                  className="hc-register-btn"
-                  onClick={closeMenu}
-                >
-                  <i className="bi bi-person-plus"></i>
-                  Register
-                </Link>
-
-              </div>
-            )}
+            </button>
 
           </div>
+
         </div>
       </nav>
 
-      {/* =========================
-          PROFILE DROPDOWN
-      ========================== */}
+      {/* =====================================================
+          DESKTOP PROFILE DROPDOWN
+      ====================================================== */}
 
-      {user && showProfile && !loggingOut && (
-        <div className="hc-profile-dropdown">
+      {user &&
+        showProfile &&
+        !loggingOut && (
 
-          {/* PROFILE HEADER */}
-
-          <div className="hc-profile-top">
-
-            {/* =====================================================
-    PROFILE IMAGE
-===================================================== */}
-
-            <div className="hc-profile-avatar-container">
-
-              <div className="hc-profile-avatar-large">
-
-                {profileImage ? (
-                  <img
-                    src={profileImage}
-                    alt="Profile"
-                  />
-                ) : (
-                  user.name
-                    ? user.name.charAt(0).toUpperCase()
-                    : "U"
-                )}
-
-              </div>
-
-              {/* UPLOAD BUTTON */}
-
-              <label
-                htmlFor="navbar-profile-image"
-                className="hc-profile-image-upload"
-                title="Change profile picture"
-              >
-                <i className="bi bi-camera-fill"></i>
-              </label>
-
-              <input
-                id="navbar-profile-image"
-                type="file"
-                accept="image/*"
-                onChange={handleProfileImageUpload}
-                style={{ display: "none" }}
-              />
-
-            </div>
-
-            <div className="hc-profile-name-section">
-
-              <h5>{user.name}</h5>
-
-              <span className="hc-role-badge">
-                <i className="bi bi-shield-check"></i>
-                {role || "USER"}
-              </span>
-
-            </div>
-
-          </div>
-
-          <div className="hc-profile-divider"></div>
-
-          {/* EMAIL */}
-
-          <div className="hc-profile-detail">
-
-            <div className="hc-detail-icon email">
-              <i className="bi bi-envelope-fill"></i>
-            </div>
-
-            <div>
-              <small>Email</small>
-              <p>{user.email}</p>
-            </div>
-
-          </div>
-
-          {/* PHONE */}
-
-          <div className="hc-profile-detail">
-
-            <div className="hc-detail-icon phone">
-              <i className="bi bi-telephone-fill"></i>
-            </div>
-
-            <div>
-              <small>Phone</small>
-
-              <p>
-                {user.phone || "Not available"}
-              </p>
-            </div>
-
-          </div>
-
-          {/* ADDRESS */}
-
-          <div className="hc-profile-detail">
-
-            <div className="hc-detail-icon address">
-              <i className="bi bi-geo-alt-fill"></i>
-            </div>
-
-            <div>
-              <small>Address</small>
-
-              <p>
-                {user.address || "Not available"}
-              </p>
-            </div>
-
-          </div>
-
-          {/* WORKER SERVICE */}
-
-          {role === "WORKER" &&
-            user.workerService && (
-              <div className="hc-profile-detail">
-
-                <div className="hc-detail-icon service">
-                  <i className="bi bi-tools"></i>
-                </div>
-
-                <div>
-                  <small>Service</small>
-                  <p>{user.workerService}</p>
-                </div>
-
-              </div>
-            )}
-
-          <div className="hc-profile-divider"></div>
-
-          {/* EDIT PROFILE */}
-
-          <Link
-            to="/profile"
-            className="hc-profile-action"
-            onClick={() => setShowProfile(false)}
+          <div
+            className="hc-profile-dropdown hc-desktop-profile-dropdown"
+            ref={profileDropdownRef}
           >
-            <i className="bi bi-pencil-square"></i>
-            <span>Edit Profile</span>
-            <i className="bi bi-chevron-right"></i>
-          </Link>
 
-          {/* LOGOUT */}
+            {renderProfileContent()}
 
-          <button
-            type="button"
-            className="hc-profile-logout"
-            onClick={handleLogout}
-            disabled={loggingOut}
-          >
-            <i className="bi bi-box-arrow-right"></i>
+          </div>
 
-            <span>
-              {loggingOut
-                ? "Logging out..."
-                : "Logout"}
-            </span>
-          </button>
+        )}
 
-          {/* CLOSE */}
+      {/* =====================================================
+          AI SUPPORT CHAT
+      ====================================================== */}
 
-          <button
-            type="button"
-            className="hc-profile-close"
-            onClick={() => setShowProfile(false)}
-          >
-            Close
-          </button>
+      {showChat && user && (
 
-        </div>
-      )}
+        <div
+          className="hc-chat-overlay"
+          onClick={(event) => {
 
-      {showProfileImagePreview && profileImage && (
-  <div
-    className="hc-profile-image-modal"
-    onClick={() => setShowProfileImagePreview(false)}
-  >
-    <div
-      className="hc-profile-image-preview"
-      onClick={(e) => e.stopPropagation()}
-    >
-      <button
-        type="button"
-        className="hc-profile-image-close"
-        onClick={() => setShowProfileImagePreview(false)}
-      >
-        <i className="bi bi-x-lg"></i>
-      </button>
+            if (
+              event.target === event.currentTarget &&
+              !chatLoading
+            ) {
 
-      <img
-        src={profileImage}
-        alt="Profile Preview"
-      />
-    </div>
-  </div>
-)}
-      {/* =========================
-          HIVECARE CHAT WINDOW
-      ========================== */}
+              setShowChat(false);
 
-      {showChat && (
-        <div className="hc-chat-overlay">
+            }
+
+          }}
+        >
 
           <div className="hc-chat-window">
-
-            {/* CHAT HEADER */}
 
             <div className="hc-chat-header">
 
               <div className="hc-chat-brand">
 
                 <div className="hc-chat-avatar">
-                  <i className="bi bi-hexagon-fill"></i>
+
+                  <i className="bi bi-robot"></i>
+
+                  <span className="hc-online-dot"></span>
+
                 </div>
 
                 <div>
-                  <strong>HiveCare Support</strong>
+
+                  <h3>
+                    HiveCare AI
+                  </h3>
 
                   <span>
-                    <span className="hc-online-dot"></span>
-                    AI Assistant
+                    AI Support Assistant
                   </span>
+
                 </div>
 
               </div>
@@ -1233,123 +1693,160 @@ const handleProfileImageUpload = (e) => {
                 className="hc-chat-close"
                 onClick={closeChat}
                 disabled={chatLoading}
+                aria-label="Close support"
               >
+
                 <i className="bi bi-x-lg"></i>
+
               </button>
 
             </div>
-
-            {/* CHAT BODY */}
 
             <div
               className="hc-chat-body"
               ref={chatBodyRef}
             >
 
-              {chatMessages.map((chat, index) => (
-                <div
-                  key={index}
-                  className={`hc-chat-message-row ${chat.sender === "user"
-                    ? "hc-chat-user-row"
-                    : "hc-chat-bot-row"
-                    }`}
-                >
+              {chatMessages.map(
+                (item, index) => {
 
-                  {chat.sender === "bot" && (
-                    <div className="hc-message-avatar">
-                      <i className="bi bi-hexagon-fill"></i>
-                    </div>
-                  )}
+                  const isUser =
+                    item.sender === "user";
 
-                  <div
-                    className={`hc-chat-message ${chat.sender === "user"
-                      ? "hc-chat-user-message"
-                      : "hc-chat-bot-message"
+                  return (
+
+                    <div
+                      key={`${item.sender}-${index}`}
+                      className={`hc-chat-message-row ${
+                        isUser
+                          ? "hc-chat-user-row"
+                          : "hc-chat-bot-row"
                       }`}
-                  >
-                    {chat.message}
-                  </div>
+                    >
 
-                </div>
-              ))}
+                      {!isUser && (
+
+                        <div className="hc-message-avatar">
+
+                          <i className="bi bi-robot"></i>
+
+                        </div>
+
+                      )}
+
+                      <div
+                        className={`hc-chat-message ${
+                          isUser
+                            ? "hc-chat-user-message"
+                            : "hc-chat-bot-message"
+                        }`}
+                      >
+
+                        {item.message}
+
+                      </div>
+
+                    </div>
+
+                  );
+
+                }
+              )}
 
               {chatLoading && (
+
                 <div className="hc-chat-message-row hc-chat-bot-row">
 
                   <div className="hc-message-avatar">
-                    <i className="bi bi-hexagon-fill"></i>
+
+                    <i className="bi bi-robot"></i>
+
                   </div>
 
                   <div className="hc-chat-message hc-chat-bot-message hc-typing">
+
                     <span></span>
                     <span></span>
                     <span></span>
+
                   </div>
 
                 </div>
+
               )}
 
             </div>
 
-            {/* QUICK QUESTIONS */}
+            {chatMessages.length <= 1 &&
+              !chatLoading && (
 
-            {!chatLoading && chatMessages.length <= 2 && (
-              <div className="hc-quick-questions">
+                <div className="hc-quick-questions">
 
-                <button
-                  type="button"
-                  onClick={() =>
-                    handleQuickQuestion(
-                      "How can I book a service?"
-                    )
-                  }
-                >
-                  <i className="bi bi-calendar-check"></i>
-                  Book a service
-                </button>
+                  <button
+                    type="button"
+                    onClick={() =>
+                      sendQuickQuestion(
+                        "How can I book a service?"
+                      )
+                    }
+                  >
 
-                <button
-                  type="button"
-                  onClick={() =>
-                    handleQuickQuestion(
-                      "How can I check my bookings?"
-                    )
-                  }
-                >
-                  <i className="bi bi-clock-history"></i>
-                  My bookings
-                </button>
+                    <i className="bi bi-calendar-check"></i>
 
-                <button
-                  type="button"
-                  onClick={() =>
-                    handleQuickQuestion(
-                      "How does payment work?"
-                    )
-                  }
-                >
-                  <i className="bi bi-credit-card"></i>
-                  Payment help
-                </button>
+                    Book a service
 
-              </div>
-            )}
+                  </button>
 
-            {/* CHAT INPUT */}
+                  <button
+                    type="button"
+                    onClick={() =>
+                      sendQuickQuestion(
+                        "How can I check my booking?"
+                      )
+                    }
+                  >
+
+                    <i className="bi bi-clock-history"></i>
+
+                    Check booking
+
+                  </button>
+
+                  <button
+                    type="button"
+                    onClick={() =>
+                      sendQuickQuestion(
+                        "How can I contact support?"
+                      )
+                    }
+                  >
+
+                    <i className="bi bi-headset"></i>
+
+                    Contact support
+
+                  </button>
+
+                </div>
+
+              )}
 
             <form
               className="hc-chat-input-area"
-              onSubmit={handleChatSubmit}
+              onSubmit={handleSendChatMessage}
             >
 
               <input
                 type="text"
-                placeholder="Ask HiveCare anything..."
                 value={chatMessage}
-                onChange={(e) =>
-                  setChatMessage(e.target.value)
+                placeholder="Ask HiveCare AI anything..."
+                onChange={(event) =>
+                  setChatMessage(
+                    event.target.value
+                  )
                 }
                 disabled={chatLoading}
+                autoComplete="off"
               />
 
               <button
@@ -1358,22 +1855,171 @@ const handleProfileImageUpload = (e) => {
                   chatLoading ||
                   !chatMessage.trim()
                 }
+                aria-label="Send message"
               >
-                <i className="bi bi-send-fill"></i>
+
+                {chatLoading ? (
+
+                  <i className="bi bi-hourglass-split"></i>
+
+                ) : (
+
+                  <i className="bi bi-send-fill"></i>
+
+                )}
+
               </button>
 
             </form>
 
             <div className="hc-chat-footer">
-              HiveCare AI Support
+
+              <i className="bi bi-stars"></i>
+
+              Powered by HiveCare AI
+
             </div>
 
           </div>
 
         </div>
+
       )}
+
+      {/* =====================================================
+          PROFILE IMAGE PREVIEW
+      ====================================================== */}
+
+      {showProfileImagePreview &&
+        profileImage && (
+
+          <div
+            className="hc-profile-image-modal"
+            onClick={closeProfileImagePreview}
+          >
+
+            <div
+              className="hc-profile-image-preview"
+              onClick={(event) =>
+                event.stopPropagation()
+              }
+            >
+
+              <button
+                type="button"
+                className="hc-profile-image-close"
+                onClick={closeProfileImagePreview}
+                aria-label="Close image"
+              >
+
+                <i className="bi bi-x-lg"></i>
+
+              </button>
+
+              <img
+                src={profileImage}
+                alt={`${userName} profile preview`}
+              />
+
+              <label className="hc-profile-image-change">
+
+                <i className="bi bi-camera-fill"></i>
+
+                Change Photo
+
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={handleProfileImageChange}
+                  hidden
+                />
+
+              </label>
+
+            </div>
+
+          </div>
+
+        )}
+
+      {/* =====================================================
+          NOTIFICATION
+      ====================================================== */}
+
+      {notification.show && (
+
+        <div
+          className={`hc-notification hc-notification-${notification.type}`}
+        >
+
+          <div className="hc-notification-icon">
+
+            {notification.type === "success" ? (
+
+              <i className="bi bi-check-lg"></i>
+
+            ) : (
+
+              <i className="bi bi-exclamation-lg"></i>
+
+            )}
+
+          </div>
+
+          <div className="hc-notification-content">
+
+            <strong>
+
+              {notification.type === "success"
+                ? "Success"
+                : "Error"}
+
+            </strong>
+
+            <span>
+              {notification.message}
+            </span>
+
+          </div>
+
+          <button
+            type="button"
+            className="hc-notification-close"
+            onClick={() => {
+
+              if (
+                notificationTimerRef.current
+              ) {
+
+                clearTimeout(
+                  notificationTimerRef.current
+                );
+
+                notificationTimerRef.current =
+                  null;
+
+              }
+
+              setNotification({
+                show: false,
+                type: "",
+                message: ""
+              });
+
+            }}
+            aria-label="Close notification"
+          >
+
+            <i className="bi bi-x"></i>
+
+          </button>
+
+        </div>
+
+      )}
+
     </>
   );
-}
+};
 
 export default Navbar;

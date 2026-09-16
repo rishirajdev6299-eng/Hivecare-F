@@ -2320,3 +2320,282 @@
     width: 100%;
   }
 }
+
+/* =====================================================
+   CANCEL CONFIRMATION POPUP
+===================================================== */
+
+.cancel-confirm-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.58);
+  backdrop-filter: blur(5px);
+  -webkit-backdrop-filter: blur(5px);
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  padding: 20px;
+
+  z-index: 9999;
+
+  animation: cancelOverlayFadeIn 0.2s ease;
+}
+
+
+/* =====================================================
+   MODAL
+===================================================== */
+
+.cancel-confirm-modal {
+  width: 100%;
+  max-width: 450px;
+
+  background: #ffffff;
+
+  border-radius: 22px;
+
+  padding: 32px 30px 28px;
+
+  text-align: center;
+
+  box-shadow:
+    0 25px 70px rgba(0, 0, 0, 0.20);
+
+  animation: cancelModalSlideUp 0.25s ease;
+}
+
+
+/* =====================================================
+   ICON
+===================================================== */
+
+.cancel-confirm-icon {
+  width: 72px;
+  height: 72px;
+
+  margin: 0 auto 20px;
+
+  border-radius: 50%;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #fff4e5;
+
+  color: #f59e0b;
+
+  font-size: 30px;
+
+  box-shadow:
+    0 8px 25px rgba(245, 158, 11, 0.15);
+}
+
+
+/* =====================================================
+   CONTENT
+===================================================== */
+
+.cancel-confirm-content h3 {
+  margin: 0 0 10px;
+
+  color: #172033;
+
+  font-size: 24px;
+
+  font-weight: 700;
+}
+
+.cancel-confirm-content p {
+  margin: 0 0 8px;
+
+  color: #374151;
+
+  font-size: 15px;
+
+  line-height: 1.6;
+}
+
+.cancel-confirm-content span {
+  display: block;
+
+  color: #6b7280;
+
+  font-size: 13px;
+
+  line-height: 1.6;
+}
+
+.cancel-confirm-content strong {
+  color: #dc2626;
+
+  font-weight: 700;
+}
+
+
+/* =====================================================
+   ACTIONS
+===================================================== */
+
+.cancel-confirm-actions {
+  display: flex;
+
+  gap: 12px;
+
+  margin-top: 27px;
+}
+
+.cancel-confirm-actions button {
+  flex: 1;
+
+  min-height: 46px;
+
+  border: none;
+
+  border-radius: 10px;
+
+  font-size: 14px;
+
+  font-weight: 600;
+
+  cursor: pointer;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  gap: 8px;
+
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease,
+    background 0.2s ease;
+}
+
+.cancel-confirm-actions button:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+
+/* =====================================================
+   KEEP BOOKING
+===================================================== */
+
+.cancel-confirm-no {
+  background: #f3f4f6;
+
+  color: #374151;
+
+  border: 1px solid #e5e7eb !important;
+}
+
+.cancel-confirm-no:hover:not(:disabled) {
+  background: #e5e7eb;
+
+  box-shadow:
+    0 5px 15px rgba(0, 0, 0, 0.08);
+}
+
+
+/* =====================================================
+   YES CANCEL
+===================================================== */
+
+.cancel-confirm-yes {
+  background: #dc3545;
+
+  color: #ffffff;
+
+  box-shadow:
+    0 6px 18px rgba(220, 53, 69, 0.22);
+}
+
+.cancel-confirm-yes:hover:not(:disabled) {
+  background: #c82333;
+
+  box-shadow:
+    0 8px 22px rgba(220, 53, 69, 0.30);
+}
+
+
+/* =====================================================
+   DISABLED
+===================================================== */
+
+.cancel-confirm-actions button:disabled {
+  opacity: 0.65;
+
+  cursor: not-allowed;
+
+  transform: none;
+}
+
+
+/* =====================================================
+   ANIMATIONS
+===================================================== */
+
+@keyframes cancelOverlayFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes cancelModalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px) scale(0.97);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+
+/* =====================================================
+   MOBILE
+===================================================== */
+
+@media (max-width: 500px) {
+
+  .cancel-confirm-modal {
+    max-width: 100%;
+
+    padding: 27px 20px 22px;
+
+    border-radius: 18px;
+  }
+
+  .cancel-confirm-icon {
+    width: 62px;
+    height: 62px;
+
+    font-size: 26px;
+
+    margin-bottom: 16px;
+  }
+
+  .cancel-confirm-content h3 {
+    font-size: 21px;
+  }
+
+  .cancel-confirm-content p {
+    font-size: 14px;
+  }
+
+  .cancel-confirm-actions {
+    flex-direction: column;
+  }
+
+  .cancel-confirm-actions button {
+    width: 100%;
+  }
+}

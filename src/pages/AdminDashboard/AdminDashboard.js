@@ -68,7 +68,7 @@ function AdminDashboard() {
   /* =========================================================
      MAIN DATA
   ========================================================= */
-
+  const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
   const [reviews, setReviews] = useState([]);
   const [stats, setStats] = useState({});
   const [bookings, setBookings] = useState([]);
@@ -4745,6 +4745,15 @@ function AdminDashboard() {
   ========================================================= */
 
   const logout = () => {
+    setShowLogoutConfirm(true);
+  };
+
+  const cancelLogout = () => {
+    setShowLogoutConfirm(false);
+  };
+
+  const confirmLogout = () => {
+    setShowLogoutConfirm(false);
 
     // Remove JWT token
     authLogout();
@@ -4753,7 +4762,6 @@ function AdminDashboard() {
     navigate("/login", {
       replace: true
     });
-
   };
 
 
@@ -8407,7 +8415,48 @@ function AdminDashboard() {
 
       </main>
 
+      {showLogoutConfirm && (
+        <div
+          className="hc-admin-logout-overlay"
+          onClick={cancelLogout}
+        >
+          <div
+            className="hc-admin-logout-modal"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="hc-admin-logout-icon">
+              🚪
+            </div>
 
+            <h2 className="hc-admin-logout-title">
+              Logout?
+            </h2>
+
+            <p className="hc-admin-logout-message">
+              Are you sure you want to logout from your
+              HiveCare Admin account?
+            </p>
+
+            <div className="hc-admin-logout-buttons">
+              <button
+                type="button"
+                className="hc-admin-logout-button hc-admin-logout-cancel"
+                onClick={cancelLogout}
+              >
+                Cancel
+              </button>
+
+              <button
+                type="button"
+                className="hc-admin-logout-button hc-admin-logout-confirm"
+                onClick={confirmLogout}
+              >
+                Yes, Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {/* =====================================================
           DELETE MODAL
       ===================================================== */}

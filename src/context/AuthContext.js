@@ -52,10 +52,10 @@ export function AuthProvider({ children }) {
       const currentUser = response.data;
 
 
-      console.log(
-        "AUTH USER FROM BACKEND:",
-        currentUser
-      );
+      // console.log(
+      //   "AUTH USER FROM BACKEND:",
+      //   currentUser
+      // );
 
 
       if (
@@ -83,10 +83,10 @@ export function AuthProvider({ children }) {
       };
 
 
-      console.log(
-        "AUTH ROLE:",
-        normalizedUser.role
-      );
+      // console.log(
+      //   "AUTH ROLE:",
+      //   normalizedUser.role
+      // );
 
 
       setUser(normalizedUser);

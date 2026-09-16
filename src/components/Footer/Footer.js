@@ -186,7 +186,7 @@ function Footer() {
               <div>
                 <span>Email</span>
                 <p>
-                  support@hivecare.com
+                  hivecare2@gmail.com
                 </p>
               </div>
 
@@ -202,7 +202,7 @@ function Footer() {
               <div>
                 <span>Phone</span>
                 <p>
-                  +91 98765 43210
+                  +91 98520 56217
                 </p>
               </div>
 

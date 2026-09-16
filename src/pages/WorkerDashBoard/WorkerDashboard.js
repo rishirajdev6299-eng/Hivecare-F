@@ -525,7 +525,18 @@ useEffect(() => {
      LOGOUT
   ========================================================= */
 
-  const handleLogout = () => {
+const [showLogoutConfirm, setShowLogoutConfirm] = useState(false);
+
+const handleLogout = () => {
+  setShowLogoutConfirm(true);
+};
+
+const cancelLogout = () => {
+  setShowLogoutConfirm(false);
+};
+
+const confirmLogout = () => {
+  setShowLogoutConfirm(false);
   setShowChat(false);
 
   logout();
@@ -1106,6 +1117,8 @@ useEffect(() => {
   ========================================================= */
 
   return (
+
+    
     <div className="worker-page">
       {/* =====================================================
           MOBILE OVERLAY
@@ -1614,7 +1627,7 @@ useEffect(() => {
           {/* =================================================
               DASHBOARD
           ================================================= */}
-
+          
           {activeSection ===
             "dashboard" && (
               <>
@@ -2149,6 +2162,48 @@ useEffect(() => {
               </section>
             )}
 
+            {showLogoutConfirm && (
+  <div
+    className="hc-worker-logout-overlay"
+    onClick={cancelLogout}
+  >
+    <div
+      className="hc-worker-logout-modal"
+      onClick={(e) => e.stopPropagation()}
+    >
+      <div className="hc-worker-logout-icon">
+        🚪
+      </div>
+
+      <h2 className="hc-worker-logout-title">
+        Logout?
+      </h2>
+
+      <p className="hc-worker-logout-message">
+        Are you sure you want to logout from your
+        HiveCare Worker account?
+      </p>
+
+      <div className="hc-worker-logout-buttons">
+        <button
+          type="button"
+          className="hc-worker-logout-button hc-worker-logout-cancel"
+          onClick={cancelLogout}
+        >
+          Cancel
+        </button>
+
+        <button
+          type="button"
+          className="hc-worker-logout-button hc-worker-logout-confirm"
+          onClick={confirmLogout}
+        >
+          Yes, Logout
+        </button>
+      </div>
+    </div>
+  </div>
+)}
           {/* =================================================
               MY JOBS
           ================================================= */}
